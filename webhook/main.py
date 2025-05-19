@@ -4,7 +4,6 @@ from aiogram.enums import ParseMode
 from aiogram.client.default import DefaultBotProperties
 from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
-
 import webhook.config as config
 import webhook.handlers as handlers
 
