@@ -924,6 +924,7 @@ from aiogram.types import LabeledPrice, InlineKeyboardMarkup, InlineKeyboardButt
 from aiogram.filters.command import Command
 from aiogram.fsm.context import FSMContext
 import aiohttp
+import webhook.config as config
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 PAYMENT_PROVIDER_TOKEN = os.getenv("PAYMENT_PROVIDER_TOKEN")  # Telegram Payments token
