@@ -9,7 +9,7 @@ from aiogram.types import (
 import psycopg2
 import psycopg2.extras
 from psycopg2 import connect, extras
-import config
+import webhook.config as config
 import random
 import logging
 import time
