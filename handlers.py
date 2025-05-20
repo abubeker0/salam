@@ -9,11 +9,15 @@ from aiogram.types import (
 import psycopg2
 import psycopg2.extras
 from psycopg2 import connect, extras
-import webhook.config as config
+import config as config
 import random
 import logging
 import time
 import asyncio
+from aiogram import Bot, Router, F
+from aiogram.types import Message, CallbackQuery
+from aiogram.filters import Command
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 
 logging.basicConfig(level=logging.INFO)
@@ -34,22 +38,21 @@ async def set_commands(bot: Bot):
         types.BotCommand(command="search", description="🔍 Search for a partner"),
         types.BotCommand(command="stop", description="🛑 Stop the current chat"),
         types.BotCommand(command="next", description="➡️ Find a new partner"),
-        types.BotCommand(command="gender", description="🔄 Change your gender"),
-        types.BotCommand(command="location", description="📍 Share your location"),
+        types.BotCommand(command="settings", description="⚙️ Update gender, age or location"),
         types.BotCommand(command="vip", description="💎 Become a VIP member"),
         types.BotCommand(command="credit", description="💰 Earn credit"),
         types.BotCommand(command="userid", description="🆔 Display your user ID"),
+        
     ]
     await bot.set_my_commands(commands)
-
 def location_keyboard():
     """Creates a reply keyboard for location sharing."""
-    keyboard = types.ReplyKeyboardMarkup(
+    return types.ReplyKeyboardMarkup(
         keyboard=[[types.KeyboardButton(text="📍 Share Location", request_location=True)]],
         resize_keyboard=True,
-        one_time_keyboard=True,
+        one_time_keyboard=True
     )
-    return keyboard
+
 
 from aiogram import Router, types, F, Bot
 from aiogram.types import ReplyKeyboardRemove
@@ -57,39 +60,54 @@ from aiogram.types import ReplyKeyboardRemove
 
 router = Router()
 
+import aiohttp
+from aiogram.types import ReplyKeyboardRemove
+
+async def get_city_from_coords(lat, lon):
+    url = f"https://nominatim.openstreetmap.org/reverse?lat={lat}&lon={lon}&format=json"
+    headers = {"User-Agent": "TelegramBot"}
+
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url, headers=headers) as resp:
+            if resp.status != 200:
+                return None
+            data = await resp.json()
+            return data.get("address", {}).get("city") or \
+                   data.get("address", {}).get("town") or \
+                   data.get("address", {}).get("village")
+
 @router.message(F.location)
 async def location_handler(message: types.Message, bot: Bot):
-    """Handles location sharing."""
+    """Handles location sharing and saves city name."""
     location = message.location
+    lat, lon = location.latitude, location.longitude
+    city = await get_city_from_coords(lat, lon)
+
+    if not city:
+        await message.answer("⚠️ Could not detect your city. Please try again later.", reply_markup=ReplyKeyboardRemove())
+        return
+
     conn = await create_database_connection()
     cursor = conn.cursor()
-    cursor.execute("UPDATE users SET location = %s WHERE user_id = %s", (f"{location.latitude},{location.longitude}", message.from_user.id))
+    cursor.execute("UPDATE users SET location = %s WHERE user_id = %s", (city, message.from_user.id))
     conn.commit()
     cursor.close()
     conn.close()
-    await message.answer("✅ Location shared!", reply_markup=ReplyKeyboardRemove())
-    await set_commands(bot) #Corrected function name and import
 
-@router.message(Command("location"))
-async def location_command(message: types.Message):
-    """Handles the /location command."""
-    await message.answer(
-        "📍 Would you like to share your location for better matches?\n\n"
-        "This is optional, but helps us find people near you.",
-        reply_markup=location_keyboard()
-    )
+    await message.answer(f"✅ Location set to: {city}", reply_markup=ReplyKeyboardRemove())
+    await set_commands(bot)
+
+
+
     # Global dictionary to store current chat partners
 current_chats = {}
-
-
-
 
 def gender_keyboard(context="start"):
     """Creates an inline keyboard for gender selection."""
     keyboard = types.InlineKeyboardMarkup(inline_keyboard=[
         [types.InlineKeyboardButton(text="♂️ Male", callback_data=f"gender:{context}:male")],
         [types.InlineKeyboardButton(text="♀️ Female", callback_data=f"gender:{context}:female")],
-        [types.InlineKeyboardButton(text="any", callback_data=f"gender:{context}:anyr")],
+        [types.InlineKeyboardButton(text="any", callback_data=f"gender:{context}:any")],
     ])
     return keyboard
 
@@ -172,11 +190,11 @@ async def age_handler(message: types.Message, bot: Bot):
         reply_markup=location_keyboard()
     )
     await set_commands(bot) #Set commands after age change.
+@router.callback_query(F.data == "set_gender")
+async def set_gender_handler(query: types.CallbackQuery):
+    await query.message.answer("🔄 Select your new gender:", reply_markup=gender_keyboard(context="change"))
+    await query.answer()
 
-@router.message(Command("gender"))
-async def change_gender_command(message: types.Message):
-    """Handles the /gender command to change gender."""
-    await message.answer("🔄 Select your new gender:", reply_markup=gender_keyboard(context="change"))
 current_chats = {}  # Dictionary to store active chat pairs (user_id: partner_id)
 def gender_selection_keyboard():
     """Creates an inline keyboard for gender selection."""
@@ -304,7 +322,7 @@ async def gender_preference_callback(query: types.CallbackQuery, bot: Bot):
         if partner_id and partner_id in current_chats:
             del current_chats[partner_id]
             await bot.send_message(partner_id, "Your partner has disconnected.")
-        await query.message.answer("You were in a chat. Disconnected and now searching again...")
+        await query.message.answer("You were in a chat. Disconnected.")
 
     # --- Check VIP status & gender ---
     conn = await create_database_connection()
@@ -355,9 +373,7 @@ async def gender_preference_callback(query: types.CallbackQuery, bot: Bot):
             "/next — find a new partner\n"
             "/stop — stop this chat"
         )
-    else:
-        # Keep them in the queue silently
-        await query.message.answer("Still looking for a suitable partner...")
+   
 
 
         # Delete the partner's searching message (assuming you have this logic)
@@ -410,25 +426,37 @@ async def get_partner_searching_message_id(partner_id: int) -> int | None:
     #"""Handles the callback to cancel the search."""
     #await query.message.answer("Search canceled.")
     #await query.answer()
+@router.message(lambda message: message.text == "🚹 Search by Gender")
+async def search_by_gender_handler(message: Message, bot: Bot):
+    await handle_vip_search(message, bot)
 
+from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+
+def search_menu_reply_keyboard():
+    return ReplyKeyboardMarkup(
+        keyboard=[
+            [KeyboardButton(text="🏙️ Search by City")],
+            [ KeyboardButton(text="🚹 Search by Gender")]
+        ],
+        resize_keyboard=True,
+        one_time_keyboard=False,
+    )
+@router.callback_query(F.data == "set_location")
+async def set_location_callback(query: types.CallbackQuery):
+    keyboard = ReplyKeyboardMarkup(
+        keyboard=[[KeyboardButton(text="📍 Share Location", request_location=True)]],
+        resize_keyboard=True,
+        one_time_keyboard=True,
+    )
+    await query.message.answer("Please share your live location:", reply_markup=keyboard)
+    await query.answer()
 
 
 @router.message(Command("search"))
 async def search_command(message: types.Message, bot: Bot):
-    """Handles the /search command."""
-    user_id = message.from_user.id
-    conn = await create_database_connection()
-    cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-
-    cursor.execute("SELECT is_vip FROM users WHERE user_id = %s", (user_id,))
-    is_vip = cursor.fetchone()['is_vip']
-    cursor.close()
-    conn.close()
-
-    if is_vip:
-        await handle_vip_search(message, bot)
-    else:
-        await handle_non_vip_search(message, bot)
+    """Handles the /search command (simple random matching)."""
+    await handle_non_vip_search(message, bot)
 
 
 @router.message(Command("stop"))
@@ -452,14 +480,24 @@ async def stop_command(message: types.Message, bot: Bot):
         del current_chats[user_id]
         del current_chats[partner_id]
         logging.info(f"Chat stopped: {user_id} - {partner_id}. Current chats: {current_chats}")
-
-        await message.answer("✅ Chat stopped. /search to find a new partner")
-        await bot.send_message(partner_id, "✅ Your partner has stopped the chat. /search to find a new partner")
+        await bot.send_message(partner_id, "✅ Your partner has stopped the chat. /search to find a new partner",  reply_markup=search_menu_reply_keyboard())
+        await message.answer("✅ Chat stopped. /search to find a new partner",  reply_markup=search_menu_reply_keyboard())
+        
         #Remove users from the search queue.
         search_queue[:] = [(uid, ts, gen) for uid, ts, gen in search_queue if uid not in (user_id, partner_id)]
     else:
         await message.answer("There was an issue stopping the chat.")
         logging.error(f"Error stopping chat: {user_id} - {partner_id}. Current chats: {current_chats}")
+@router.message(Command("settings"))
+async def settings_command(message: Message):
+    keyboard = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="🔄 Change Gender", callback_data="set_gender")],
+            [InlineKeyboardButton(text="📍 Set Location", callback_data="set_location")],
+            [InlineKeyboardButton(text="🎂 Set Age", callback_data="set_age")]
+        ]
+    )
+    await message.answer("⚙️ Choose what you want to update:", reply_markup=keyboard)
 
 
 #def gender_search_keyboard():
@@ -672,10 +710,22 @@ async def next_command(message: types.Message, bot: Bot):
 
     non_vip_search_locks[user_id] = False
 
+#@router.message(Command("vip"))
+#async def show_vip_options(message: types.Message):
+    #await message.answer("Choose your VIP plan:", reply_markup=payment_method_keyboard)
 @router.message(Command("vip"))
-async def show_vip_options(message: types.Message):
-    await message.answer("Choose your VIP plan:", reply_markup=payment_method_keyboard)
-   
+async def vip_command(message: Message):
+    text = (
+        "<b>💎 Become a VIP User</b>\n"
+        "Support the chat and unlock premium features instantly.\n\n"
+        "<b>Choose your preferred payment method:</b>"
+    )
+
+    builder = InlineKeyboardBuilder()
+    builder.button(text="🧾 Telegram Payments", callback_data="pay_telegram")
+    builder.button(text="💳 Chapa Payments", callback_data="pay_chapa")
+
+    await message.answer(text, reply_markup=builder.as_markup()) 
 
 @router.message(Command("userid"))
 async def userid_command(message: types.Message):
@@ -700,53 +750,94 @@ async def get_user_by_id(user_id):
     except Exception as e:
         print(f"❌ Error in get_user_by_id: {e}")
         return None
+from aiogram.fsm.context import FSMContext
+from aiogram.fsm.state import State, StatesGroup
+
+class SettingsStates(StatesGroup):
+    waiting_for_age = State()
+
+@router.callback_query(F.data == "set_age")
+async def ask_age(query: types.CallbackQuery, state: FSMContext):
+    await query.message.answer("🔢 Please enter your age:")
+    await state.set_state(SettingsStates.waiting_for_age)
+
+@router.message(SettingsStates.waiting_for_age)
+async def age_input_handler(message: types.Message, state: FSMContext):
+    text = message.text.strip()
+    if text.isdigit():
+        age = int(text)
+        if 10 <= age <= 100:
+            # Update database here
+            # ...
+            await message.answer(f"✅ Age set to: {age}")
+            await state.clear()
+        else:
+            await message.answer("❌ Please enter a valid age between 10 and 100.")
+    else:
+        await message.answer("❌ Please enter a valid numeric age.")
 
 
-
-@router.callback_query(F.data == "search_city")
-async def search_city_callback(query: types.CallbackQuery, bot: Bot):
-    """Handles city search callback."""
-    global search_queue
-    user_id = query.from_user.id
+from aiogram.types import Message
+import psycopg2.extras
+import time
+import random
+@router.message(lambda message: message.text == "🏙️ Search by City")
+async def search_by_city_handler(message: Message, bot: Bot):
+    user_id = message.from_user.id
     conn = await create_database_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT location FROM users WHERE user_id = %s", (user_id,))
-    user_location = cursor.fetchone()['location']
-    cursor.close()
-    conn.close()
 
-    if not user_location:
-        await query.message.answer("Please share your location first.")
-        return
+    try:
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        # Check VIP and location
+        cursor.execute("SELECT is_vip, location FROM users WHERE user_id = %s", (user_id,))
+        row = cursor.fetchone()
+        if not row or not row['is_vip']:
+            await message.answer("🚫 City-based matching is a VIP-only feature.")
+            return
 
-    city = user_location.split(',')[0] #get the city from the saved location.
+        user_location = row['location']
+        if not user_location:
+            await message.answer("📍 Please share your location first using /setlocation.")
+            return
 
-    search_queue.append((user_id, time.time(), city)) # Add to the search queue.
-    if await find_match(user_id, city, bot):
-        await query.answer()
-        return
+        city = user_location.strip()  # exact city string
 
-    await query.message.answer("Searching for a partner in your city...")
-    await query.answer()
+        if user_id in current_chats:
+            await message.answer("⚠️ You are already in a chat. Use /stop to end it first.")
+            return
 
-    conn = await create_database_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT user_id FROM users WHERE user_id != %s AND location LIKE %s", (user_id, f"%{city}%"))
-    available_users = cursor.fetchall()
-    cursor.close()
-    conn.close()
+        search_queue.append((user_id, time.time(), city))
+        searching_msg = await message.answer("🔍 Searching for a partner in your city...")
 
-    if not available_users:
-        await query.message.answer("No users are currently available in your city.")
-        return
+        cursor.execute("""
+            SELECT user_id FROM users 
+            WHERE user_id != %s AND location = %s
+        """, (user_id, city))
+        available_users = cursor.fetchall()
 
-    partner_id = random.choice(available_users)['user_id']
-    current_chats[user_id] = partner_id
-    current_chats[partner_id] = user_id
+        available_users = [u['user_id'] for u in available_users if u['user_id'] not in current_chats]
 
-    await query.message.answer("✅ Partner found! Start chatting.")
-    await bot.send_message(partner_id, "✅ Partner found! Start chatting.")
-    search_queue[:] = [(uid, ts, gen) for uid, ts, gen in search_queue if uid not in (user_id, partner_id)]  
+        if not available_users:
+            await bot.delete_message(chat_id=user_id, message_id=searching_msg.message_id)
+            await message.answer("😔 No users available in your city right now.")
+            return
+
+        partner_id = random.choice(available_users)
+        current_chats[user_id] = partner_id
+        current_chats[partner_id] = user_id
+
+        await bot.delete_message(chat_id=user_id, message_id=searching_msg.message_id)
+
+        await bot.send_message(partner_id, "✅ City match found! You are now chatting.")
+        await message.answer("✅ City match found! You are now chatting.")
+
+        # Clean search queue
+        search_queue[:] = [(uid, ts, loc) for uid, ts, loc in search_queue if uid not in (user_id, partner_id)]
+
+    finally:
+        cursor.close()
+        conn.close()
+
 @router.message(F.text)
 async def chat_handler(message: types.Message, bot: Bot):
     """Handles chat messages."""
@@ -915,247 +1006,103 @@ async def create_tables():
     conn.commit()
     cursor.close()
     conn.close()
-import os
-import asyncio
-from datetime import datetime, timedelta
-
-from aiogram import Bot, Dispatcher, F, types
-from aiogram.types import LabeledPrice, InlineKeyboardMarkup, InlineKeyboardButton, PreCheckoutQuery, Message
-from aiogram.filters.command import Command
-from aiogram.fsm.context import FSMContext
-import aiohttp
-import webhook.config as config
-
-BOT_TOKEN = os.getenv("BOT_TOKEN")
-PAYMENT_PROVIDER_TOKEN = os.getenv("PAYMENT_PROVIDER_TOKEN")  # Telegram Payments token
-CHAPA_SECRET_KEY = os.getenv("CHAPA_SECRET_KEY")  # Chapa secret key
-
-bot = Bot(token=BOT_TOKEN)
-dp = Dispatcher()
-
-# --- Telegram Payment prices (in cents, USD) ---
-PRICE_1W = [LabeledPrice(label="VIP 1 Week", amount=100)]  # $1.00
-PRICE_1M = [LabeledPrice(label="VIP 1 Month", amount=300)]
-PRICE_6M = [LabeledPrice(label="VIP 6 Months", amount=1000)]
-PRICE_1Y = [LabeledPrice(label="VIP 1 Year", amount=1800)]
-
-# --- Chapa prices (in ETB) ---
-CHAPA_PRICES = {
-    "1m": 400,
-    "6m": 1500,
-    "1y": 2500,
-}
-
-# Keyboard to choose subscription duration for Telegram payments
-telegram_vip_keyboard = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text="1 Week - $1", callback_data="buy_telegram_1w")],
-    [InlineKeyboardButton(text="1 Month - $3", callback_data="buy_telegram_1m")],
-    [InlineKeyboardButton(text="6 Months - $10", callback_data="buy_telegram_6m")],
-    [InlineKeyboardButton(text="1 Year - $18", callback_data="buy_telegram_1y")],
-])
-
-# Keyboard to choose subscription duration for Chapa payments
-chapa_vip_keyboard = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text="1 Month - 400 ETB", callback_data="buy_chapa_1m")],
-    [InlineKeyboardButton(text="6 Months - 1500 ETB", callback_data="buy_chapa_6m")],
-    [InlineKeyboardButton(text="1 Year - 2500 ETB", callback_data="buy_chapa_1y")],
-])
-
-# Keyboard to choose payment method
-payment_method_keyboard = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text="Telegram Payments (USD)", callback_data="choose_pay_telegram")],
-    [InlineKeyboardButton(text="Chapa Payments (ETB)", callback_data="choose_pay_chapa")],
-])
-
-# --- Command /vip to start the process ---
-# --- Handle choosing payment method ---
-@dp.callback_query(F.data.startswith("choose_pay_"))
-async def choose_payment_method(callback: types.CallbackQuery):
-    method = callback.data.split("_")[-1]  # "telegram" or "chapa"
-    if method == "telegram":
-        await callback.message.edit_text("Choose your VIP subscription plan (Telegram Payments):", reply_markup=telegram_vip_keyboard)
-    elif method == "chapa":
-        await callback.message.edit_text("Choose your VIP subscription plan (Chapa Payments):", reply_markup=chapa_vip_keyboard)
-    else:
-        await callback.answer("Invalid payment method.", show_alert=True)
-
-
-# --- Handle Telegram payment button ---
-@dp.callback_query(F.data.startswith("buy_telegram_"))
-async def process_buy_telegram(callback_query: types.CallbackQuery):
-    subscription_type = callback_query.data.split("_")[-1]  # e.g., "1w", "1m", "6m", "1y"
-
-    prices_map = {
-        "1w": PRICE_1W,
-        "1m": PRICE_1M,
-        "6m": PRICE_6M,
-        "1y": PRICE_1Y,
-    }
-    prices = prices_map.get(subscription_type)
-    if not prices:
-        await callback_query.answer("Invalid subscription type.", show_alert=True)
-        return
-
-    title = "VIP Subscription"
-    description = f"Purchase VIP subscription for {subscription_type}."
-    payload = f"vip_telegram_{subscription_type}_{callback_query.from_user.id}"
-    currency = "USD"
-
-    await bot.send_invoice(
-        chat_id=callback_query.from_user.id,
-        title=title,
-        description=description,
-        payload=payload,
-        provider_token=PAYMENT_PROVIDER_TOKEN,
-        currency=currency,
-        prices=prices,
-        start_parameter="vip-subscription",
+@router.message(Command("vip"))
+async def vip_command(message: Message):
+    text = (
+        "<b>💎 Become a VIP User</b>\n"
+        "Support the chat and unlock premium features instantly.\n\n"
+        "<b>Choose your preferred payment method:</b>"
     )
-    await callback_query.answer()
 
+    builder = InlineKeyboardBuilder()
+    builder.button(text="🧾 Telegram Payments", callback_data="pay_telegram")
+    builder.button(text="💳 Chapa Payments", callback_data="pay_chapa")
 
-# --- Telegram payment handlers ---
-@dp.pre_checkout_query()
-async def pre_checkout(pre_checkout_q: PreCheckoutQuery):
-    await pre_checkout_q.answer(ok=True)
+    await message.answer(text, reply_markup=builder.as_markup())
 
+@router.callback_query(F.data == "pay_telegram")
+async def choose_telegram_plan(callback: CallbackQuery):
+    keyboard = InlineKeyboardBuilder()
+    keyboard.button(text="100 ⭐ / $1.99 a week", callback_data="tgpay_week")
+    keyboard.button(text="250 ⭐ / $3.99 a month", callback_data="tgpay_1m")
+    keyboard.button(text="1000 ⭐ / $19.99 a year", callback_data="tgpay_1y")
+    await callback.message.edit_text("💫 Choose your plan with Telegram Stars:", reply_markup=keyboard.as_markup())
 
-@dp.message(F.successful_payment)
-async def process_successful_payment(message: Message, db):
-    payload = message.successful_payment.invoice_payload
-    # Example payload: vip_telegram_1m_123456789
-    parts = payload.split("_")
-    if len(parts) != 4 or parts[0] != "vip" or parts[1] != "telegram":
-        await message.answer("Invalid payment payload.")
+@router.callback_query(F.data == "pay_chapa")
+async def choose_chapa_plan(callback: CallbackQuery):
+    keyboard = InlineKeyboardBuilder()
+    keyboard.button(text="1 Month - 400 ETB", callback_data="chapa_1m")
+    keyboard.button(text="6 Months - 1500 ETB", callback_data="chapa_6m")
+    keyboard.button(text="1 Year - 2500 ETB", callback_data="chapa_1y")
+    await callback.message.edit_text("Choose your Chapa plan:", reply_markup=keyboard.as_markup())
+import aiohttp
+import uuid
+
+CHAPA_SECRET_KEY = config.CHAPA_SECRET_KEY
+CHAPA_BASE_URL = "https://api.chapa.co/v1/transaction/initialize"
+CHAPA_CALLBACK_URL = "https://yourdomain.com/chapa/webhook"  # Replace this
+
+@router.callback_query(F.data.startswith("chapa_"))
+async def handle_chapa_plan(callback: CallbackQuery):
+    user_id = callback.from_user.id
+    plan = callback.data
+    tx_ref = str(uuid.uuid4())
+
+    # Define pricing
+    prices = {
+        "chapa_1m": 400,
+        "chapa_6m": 1500,
+        "chapa_1y": 2500
+    }
+    amount = prices.get(plan)
+
+    if not amount:
+        await callback.answer("Invalid plan.", show_alert=True)
         return
 
-    _, _, subscription_type, user_id_str = parts
-    user_id = int(user_id_str)
+    await callback.answer("Preparing Chapa payment...", show_alert=False)
 
-    now = datetime.utcnow()
-    if subscription_type == "1w":
-        expires_at = now + timedelta(weeks=1)
-    elif subscription_type == "1m":
-        expires_at = now + timedelta(days=30)
-    elif subscription_type == "6m":
-        expires_at = now + timedelta(days=182)
-    elif subscription_type == "1y":
-        expires_at = now + timedelta(days=365)
-    else:
-        expires_at = now
-
-    # Update DB (you must implement db logic and pass db connection here)
-    query = """
-        INSERT INTO users (user_id, is_vip, vip_expires_at)
-        VALUES ($1, TRUE, $2)
-        ON CONFLICT (user_id) DO UPDATE SET
-            is_vip = TRUE,
-            vip_expires_at = EXCLUDED.vip_expires_at
-    """
-    await db.execute(query, user_id, expires_at)
-
-    await message.answer(f"🎉 Thank you for purchasing VIP! Your VIP subscription is valid until {expires_at:%Y-%m-%d %H:%M:%S} UTC.")
-
-
-# --- Handle Chapa payment button ---
-@dp.callback_query(F.data.startswith("buy_chapa_"))
-async def process_buy_chapa(callback_query: types.CallbackQuery):
-    subscription_type = callback_query.data.split("_")[-1]  # "1m", "6m", "1y"
-    amount_etb = CHAPA_PRICES.get(subscription_type)
-    if not amount_etb:
-        await callback_query.answer("Invalid subscription type.", show_alert=True)
-        return
-
-    user_id = callback_query.from_user.id
-    tx_ref = f"vip_chapa_{subscription_type}_{user_id}_{int(datetime.utcnow().timestamp())}"
-
-    chapa_payload = {
-        "amount": amount_etb,
-        "currency": "ETB",
-        "email": f"user{user_id}@example.com",  # You can use Telegram username/email if you have
-        "tx_ref": tx_ref,
-        "callback_url": "https://yourdomain.com/chapa/callback",  # Your webhook URL
-        "return_url": f"https://t.me/Selameselambot?start=vip_success",  # Redirect user after payment
-        "customization[title]": "VIP Subscription",
-        "customization[description]": f"VIP subscription {subscription_type} plan",
-    }
-
-    headers = {
-        "Authorization": f"Bearer {CHAPA_SECRET_KEY}",
-        "Content-Type": "application/json",
-    }
-
+    # Create payment request
     async with aiohttp.ClientSession() as session:
-        async with session.post("https://api.chapa.co/v1/transaction/initialize", json=chapa_payload, headers=headers) as resp:
-            result = await resp.json()
-            if resp.status == 200 and result.get("status") == "success":
-                payment_url = result["data"]["checkout_url"]
-                await callback_query.message.answer(f"Please pay your VIP subscription here: {payment_url}")
-                await callback_query.answer()
-            else:
-                await callback_query.answer("Failed to initialize Chapa payment. Try again later.", show_alert=True)
+        headers = {
+            "Authorization": f"Bearer {CHAPA_SECRET_KEY}",
+            "Content-Type": "application/json"
+        }
+        payload = {
+            "amount": str(amount),
+            "currency": "ETB",
+            "email": f"user_{user_id}@bot.fake",
+            "first_name": f"user_{user_id}",
+            "tx_ref": tx_ref,
+            "callback_url": CHAPA_CALLBACK_URL,
+            "return_url": "https://t.me/Selameselambot",  # Replace with your bot
+            "customization[title]": "VIP Subscription",
+            "customization[description]": "Unlock VIP features in the bot"
+        }
 
+        async with session.post(CHAPA_BASE_URL, json=payload, headers=headers) as resp:
+            data = await resp.json()
 
-# --- Handle Chapa callback (you need to implement your webhook on your server) ---
-# Example: you receive payment confirmation, verify it with Chapa, and update your DB accordingly.
+            if resp.status == 200 and data.get("status") == "success":
+                payment_url = data["data"]["checkout_url"]
 
-# --- VIP expiry check and notification (same as your existing code) ---
-async def vip_expiry_check_loop(bot: Bot, db_pool):
-    while True:
-        async with db_pool.acquire() as conn:
-            expired_users = await conn.fetch(
-                """
-                SELECT user_id FROM users
-                WHERE is_vip = TRUE AND vip_expires_at <= NOW()
-                """
-            )
-            for record in expired_users:
-                user_id = record['user_id']
-                await conn.execute(
-                    """
-                    UPDATE users SET is_vip = FALSE, vip_expires_at = NULL WHERE user_id = $1
-                    """,
-                    user_id
+                # Store the transaction
+                conn = await create_database_connection()
+                cursor = conn.cursor()
+                cursor.execute(
+                    "INSERT INTO chapa_payments (user_id, tx_ref, plan) VALUES (%s, %s, %s)",
+                    (user_id, tx_ref, plan)
                 )
-                try:
-                    await bot.send_message(user_id, "Your VIP subscription has expired. Please renew to continue enjoying VIP benefits.")
-                except Exception as e:
-                    print(f"Failed to notify user {user_id}: {e}")
+                conn.commit()
+                cursor.close()
+                conn.close()
 
-            about_to_expire_users = await conn.fetch(
-                """
-                SELECT user_id, vip_expires_at FROM users
-                WHERE is_vip = TRUE AND vip_expires_at BETWEEN NOW() AND NOW() + INTERVAL '24 hours'
-                """
-            )
-            for record in about_to_expire_users:
-                user_id = record['user_id']
-                expires_at = record['vip_expires_at']
-                try:
-                    await bot.send_message(user_id, f"Your VIP subscription will expire on {expires_at:%Y-%m-%d %H:%M:%S}. Please renew if you want uninterrupted VIP access.")
-                except Exception as e:
-                    print(f"Failed to notify user {user_id}: {e}")
-
-        await asyncio.sleep(3600)
-
-
-
-
-# Set VIP for 30 days from now
-
-
-
-
-
-
-# Note: You should call the create_tables() function in your main.py file, within the main function, right after the bot is initialized.
-# Example:
-# async def main():
-#     bot = Bot(token=config.BOT_TOKEN, parse_mode=ParseMode.HTML)
-#     dp = Dispatcher()
-#     dp.include_router(handlers.router)
-#     await create_tables() # Call create_tables() here
-#     await bot.delete_webhook(drop_pending_updates=True)
-#     await dp.start_polling(bot)
-
-
+                # Send user the payment link
+                builder = InlineKeyboardBuilder()
+                builder.button(text="✅ Pay with Chapa", url=payment_url)
+                await callback.message.edit_text(
+                    "💳 Click below to complete your payment securely:",
+                    reply_markup=builder.as_markup()
+                )
+            else:
+                await callback.message.answer("❌ Failed to create payment. Please try again later.")
