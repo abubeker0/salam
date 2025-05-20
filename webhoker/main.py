@@ -6,7 +6,6 @@ from aiogram.client.default import DefaultBotProperties
 import webhoker.config as config
 import webhoker.handlers as handlers
 
-
 async def main():
     logging.basicConfig(level=logging.INFO)
 
@@ -18,10 +17,6 @@ async def main():
     await handlers.create_tables()
     await handlers.set_commands(bot)
     await bot.delete_webhook(drop_pending_updates=True)
-
-    
-
-   
 
     await dp.start_polling(bot)
 
