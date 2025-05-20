@@ -3,8 +3,8 @@ import logging
 from aiogram import Bot, Dispatcher
 from aiogram.enums import ParseMode
 from aiogram.client.default import DefaultBotProperties
-import config
-import handlers
+import webhoker.config as config
+import webhoker.handlers as handlers
 
 
 async def main():
