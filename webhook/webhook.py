@@ -1,8 +1,8 @@
 from fastapi import FastAPI, Request, HTTPException
 import aiohttp
 import asyncio
-from webhoker.config import CHAPA_SECRET_KEY
-from webhoker.db import create_database_connection  # You already have this
+from webhook.config import CHAPA_SECRET_KEY
+from webhook.db import create_database_connection  # You already have this
 from datetime import datetime, timedelta
 
 app = FastAPI()
