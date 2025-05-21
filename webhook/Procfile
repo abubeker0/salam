@@ -1,1 +1,2 @@
-web: uvicorn webhook.webhook:app --host=0.0.0.0 --port=8000
+web: uvicorn webhook.webhook_main:app --host=0.0.0.0 --port=8000
+
