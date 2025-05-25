@@ -11,6 +11,12 @@ import psycopg2.extras
 from psycopg2 import connect, extras
 import webhook.config as config
 import random
+from aiogram import types, Router, F
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, InputFile
+from PIL import Image, ImageFilter
+import aiofiles
+import os
+import uuid
 import logging
 import time
 import asyncio
@@ -18,6 +24,11 @@ from aiogram import Bot, Router, F
 from aiogram.types import Message, CallbackQuery
 from aiogram.filters import Command
 from aiogram.utils.keyboard import InlineKeyboardBuilder
+import asyncpg
+
+from aiogram.types import FSInputFile
+
+
 
 
 logging.basicConfig(level=logging.INFO)
@@ -29,7 +40,12 @@ async def create_database_connection():
     conn = connect(config.DATABASE_URL, cursor_factory=extras.RealDictCursor)
     return conn
 
-
+async def create_pool():
+    return await asyncpg.create_pool(
+        dsn=config.DATABASE_URL,  # Example: "postgresql://user:password@host/db"
+        min_size=1,
+        max_size=5
+    )
 
 
 async def set_commands(bot: Bot):
@@ -301,6 +317,7 @@ async def find_match(user_id, gender_pref, is_vip):
             return False
 
 
+
 async def handle_vip_search(message: types.Message, bot: Bot):
 
        """Handles /search for VIP users."""
@@ -345,7 +362,7 @@ async def gender_preference_callback(query: types.CallbackQuery, bot: Bot):
         return
 
     if not is_vip:
-        await query.message.answer("🚫 Gender-based matching is a VIP-only feature.")
+        await query.message.answer("💎 Gender-based matching is a VIP-only feature.\n""Become a /VIP member")
         return
 # Non-VIPs can't have gender preference
    
@@ -425,7 +442,7 @@ async def get_partner_searching_message_id(partner_id: int) -> int | None:
 #async def cancel_search_callback(query: types.CallbackQuery):
     #"""Handles the callback to cancel the search."""
     #await query.message.answer("Search canceled.")
-    #await query.answer()
+
 @router.message(lambda message: message.text == "🚹 Search by Gender")
 async def search_by_gender_handler(message: Message, bot: Bot):
     await handle_vip_search(message, bot)
@@ -450,13 +467,81 @@ async def set_location_callback(query: types.CallbackQuery):
         one_time_keyboard=True,
     )
     await query.message.answer("Please share your live location:", reply_markup=keyboard)
-    await query.answer()
 
-
+# somewhere in your startup code:
 @router.message(Command("search"))
-async def search_command(message: types.Message, bot: Bot):
-    """Handles the /search command (simple random matching)."""
-    await handle_non_vip_search(message, bot)
+async def search_command(message: types.Message,bot: Bot):
+    user_id = message.from_user.id
+    conn = await create_database_connection()
+
+    try:
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        cursor.execute("SELECT is_vip FROM users WHERE user_id = %s", (user_id,))
+        result = cursor.fetchone()
+
+        if result and result["is_vip"]:
+            # NEW: Quick unlimited VIP search without gender preference
+            await quick_vip_search(message)
+        else:
+            # Normal non-VIP limited search
+            await handle_non_vip_search(message,bot)
+    finally:
+        cursor.close()
+        conn.close()
+async def quick_vip_search(message: types.Message):
+    user_id = message.from_user.id
+
+    # ✅ Check if user is already in a chat
+    if user_id in current_chats:
+        await message.answer(
+            "🤔 You are already in a dialog right now.\n"
+            "/next — find a new partner\n"
+            "/stop — stop this dialog"
+        )
+        return
+
+    # ✅ Send ONE search message and store it for deletion
+    search_msg = await message.answer("🔍 Searching for a partner...")
+
+    # ✅ Clean old entries and append current user
+    search_queue[:] = [(uid, ts, gen) for uid, ts, gen in search_queue if uid != user_id]
+    search_queue.append((user_id, time.time(), "any"))
+
+    # ✅ Try to find a match
+    match_made = await find_match(user_id, "any", True)
+
+    if match_made:
+        partner_id = current_chats.get(user_id)
+
+        # ✅ Try to delete the search message
+        try:
+            await message.bot.delete_message(chat_id=message.chat.id, message_id=search_msg.message_id)
+        except Exception as e:
+            print(f"Failed to delete search message: {e}")
+
+        if partner_id:
+            await message.answer("✅ Partner found! Start chatting!\n\n/next — new partner\n/stop — end chat")
+            await message.bot.send_message(partner_id, "✅ Partner found! Start chatting!\n\n/next — new partner\n/stop — end chat")
+    else:
+        await asyncio.sleep(20)
+
+        if user_id in search_queue and user_id not in current_chats:
+            search_queue[:] = [(uid, ts, gen) for uid, ts, gen in search_queue if uid != user_id]
+
+            # ✅ Try to delete the search message again if timeout
+            try:
+                await message.bot.delete_message(chat_id=message.chat.id, message_id=search_msg.message_id)
+            except Exception as e:
+                print(f"Failed to delete timeout message: {e}")
+
+            await message.answer("🚫 No users available right now. You've been removed from the search queue.")
+
+    # Example stub: add to waiting queue, match logic, etc.
+    # match_user(user_id)...
+
+
+
+
 
 
 @router.message(Command("stop"))
@@ -469,7 +554,7 @@ async def stop_command(message: types.Message, bot: Bot):
     if user_id not in current_chats:
         await message.answer("You are not in an active chat.")
         logging.info(f"{user_id} is not in current_chats.")
-        #Remove user from search que.
+        # Remove user from search queue
         search_queue[:] = [(uid, ts, gen) for uid, ts, gen in search_queue if uid != user_id]
         return
 
@@ -477,17 +562,36 @@ async def stop_command(message: types.Message, bot: Bot):
     logging.info(f"Partner ID: {partner_id}")
 
     if partner_id in current_chats and current_chats[partner_id] == user_id:
+        # Remove both from chat map
         del current_chats[user_id]
         del current_chats[partner_id]
         logging.info(f"Chat stopped: {user_id} - {partner_id}. Current chats: {current_chats}")
-        await bot.send_message(partner_id, "✅ Your partner has stopped the chat. /search to find a new partner",  reply_markup=search_menu_reply_keyboard())
-        await message.answer("✅ Chat stopped. /search to find a new partner",  reply_markup=search_menu_reply_keyboard())
-        
-        #Remove users from the search queue.
+
+        # Notify partner
+        await bot.send_message(
+            partner_id,
+            "✅ Your partner has stopped the chat. /search to find a new partner",
+            reply_markup=search_menu_reply_keyboard()
+        )
+
+        # Notify user
+        await message.answer(
+            "✅ Chat stopped. /search to find a new partner",
+            reply_markup=search_menu_reply_keyboard()
+        )
+
+        # ✨ Send feedback buttons (no message)
+        await bot.send_message(partner_id, "How was your experience with your last partner?", reply_markup=feedback_keyboard)
+        await message.answer("How was your experience with your last partner?", reply_markup=feedback_keyboard)
+
+
+        # Remove from queue
         search_queue[:] = [(uid, ts, gen) for uid, ts, gen in search_queue if uid not in (user_id, partner_id)]
+
     else:
         await message.answer("There was an issue stopping the chat.")
         logging.error(f"Error stopping chat: {user_id} - {partner_id}. Current chats: {current_chats}")
+
 @router.message(Command("settings"))
 async def settings_command(message: Message):
     keyboard = InlineKeyboardMarkup(
@@ -564,6 +668,9 @@ import datetime
 import asyncio
 from aiogram.types import Message
 from aiogram import Bot
+from datetime import date
+
+
 
 # Initialize global variables at module level
 search_queue = []
@@ -573,7 +680,7 @@ current_chats = {}
 async def handle_non_vip_search(message: types.Message, bot: Bot):
     global search_queue, non_vip_search_locks, current_chats
     user_id = message.from_user.id
-    today = datetime.date.today()
+    today = date.today()
 
     if user_id in non_vip_search_locks and non_vip_search_locks[user_id]:
         await message.answer("Please wait for your previous search request to finish.")
@@ -662,70 +769,92 @@ async def gender_callback(query: types.CallbackQuery):
 
 @router.message(Command("next"))
 async def next_command(message: types.Message, bot: Bot):
-    """Handles the /next command by disconnecting and searching for a new partner."""
+    """Handle /next by disconnecting and routing based on VIP status."""
     global search_queue, current_chats, non_vip_search_locks
 
     user_id = message.from_user.id
 
-    # Disconnect from current chat
+    # ✅ 1. Check ban status
+    conn = await create_database_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute("""
+            SELECT banned_until FROM banned_users WHERE user_id = %s AND banned_until > NOW()
+        """, (user_id,))
+        result = cursor.fetchone()
+
+        if result:
+            banned_until = result[0]
+            await message.answer(f"🚫 You are banned until {banned_until.strftime('%Y-%m-%d %H:%M:%S')}.")
+            return
+    finally:
+        cursor.close()
+        conn.close()
+
+    # ✅ 2. Disconnect from current chat (both users)
     if user_id in current_chats:
         partner_id = current_chats.pop(user_id)
         current_chats.pop(partner_id, None)
 
-        
         await bot.send_message(partner_id, "Your partner ended the chat. /search to find a new partner")
+        await bot.send_message(partner_id, "How was your experience with your last partner?", reply_markup=feedback_keyboard)
+        await message.answer("How was your experience with your last partner?", reply_markup=feedback_keyboard)
     else:
-       info_msg = await message.answer("You're not currently in a chat. Searching for a partner...")
+        await message.answer("You're not currently in a chat. Searching for a partner...")
 
+    # ✅ 3. Check VIP status
+    conn = await create_database_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute("SELECT is_vip FROM users WHERE user_id = %s", (user_id,))
+        result = cursor.fetchone()
+        is_vip = result and result["is_vip"]
 
-    # Mark user as searching (lock to prevent overlap)
-    if user_id in non_vip_search_locks and non_vip_search_locks[user_id]:
-        return  # avoid double searches
+    finally:
+        cursor.close()
+        conn.close()
 
-    non_vip_search_locks[user_id] = True
-    search_queue[:] = [(uid, ts, gen) for uid, ts, gen in search_queue if uid != user_id]  # clean stale entry
-    search_queue.append((user_id, time.time(), "any"))
-
-    searching_message = await message.answer("✅ Chat ended.🔍 Searching for a partner...")
-
-    match_made = await find_match(user_id, "any", False)
-
-    if match_made:
-        partner_id = current_chats.get(user_id)
-        if partner_id:
-            await bot.delete_message(chat_id=message.chat.id, message_id=info_msg.message_id)
-            await bot.delete_message(chat_id=message.chat.id, message_id=searching_message.message_id)
-            await message.answer("✅ Partner found! Start chatting!\n\n/next — new partner\n/stop — end chat")
-            await bot.send_message(partner_id, "✅ Partner found! Start chatting!\n\n/next — new partner\n/stop — end chat")
-        non_vip_search_locks[user_id] = False
+    # ✅ 4. Route accordingly
+    if is_vip:
+        await quick_vip_search(message)
     else:
-        # Wait max 20 seconds for match
-        await asyncio.sleep(20)
-        if user_id in search_queue and user_id not in current_chats:
-            search_queue[:] = [(uid, ts, gen) for uid, ts, gen in search_queue if uid != user_id]
-            await bot.delete_message(chat_id=message.chat.id, message_id=searching_message.message_id)
-            await message.answer("No users available right now. Removed from search queue.")
-        elif user_id in current_chats:
-            await bot.delete_message(chat_id=message.chat.id, message_id=searching_message.message_id)
+        await handle_non_vip_search(message, bot)
 
-    non_vip_search_locks[user_id] = False
 
 #@router.message(Command("vip"))
 #async def show_vip_options(message: types.Message):
     #await message.answer("Choose your VIP plan:", reply_markup=payment_method_keyboard)
+
 @router.message(Command("vip"))
 async def vip_command(message: Message):
-    text = (
-        "<b>💎 Become a VIP User</b>\n"
-        "Support the chat and unlock premium features instantly.\n\n"
-        "<b>Choose your preferred payment method:</b>"
-    )
+    user_id = message.from_user.id
+    conn = await create_database_connection()
 
-    builder = InlineKeyboardBuilder()
-    builder.button(text="🧾 Telegram Payments", callback_data="pay_telegram")
-    builder.button(text="💳 Chapa Payments", callback_data="pay_chapa")
+    try:
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        cursor.execute("SELECT is_vip FROM users WHERE user_id = %s", (user_id,))
+        result = cursor.fetchone()
 
-    await message.answer(text, reply_markup=builder.as_markup()) 
+        if result and result["is_vip"]:  # ✅ Use key instead of index
+            await message.answer("🎉 You already have 💎 VIP access!\nEnjoy all premium features.")
+            return
+
+        # Show payment options
+        text = (
+            "<b>💎 Become a VIP User</b>\n"
+            "Support the chat and unlock premium features instantly.\n\n"
+            "<b>Choose your preferred payment method:</b>"
+        )
+
+        builder = InlineKeyboardBuilder()
+        builder.button(text="🧾 Telegram Payments", callback_data="pay_telegram")
+        builder.button(text="💳 Chapa Payments", callback_data="pay_chapa")
+
+        await message.answer(text, reply_markup=builder.as_markup())
+
+    finally:
+        cursor.close()
+        conn.close()
 
 @router.message(Command("userid"))
 async def userid_command(message: types.Message):
@@ -788,11 +917,13 @@ async def search_by_city_handler(message: Message, bot: Bot):
 
     try:
         cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
         # Check VIP and location
         cursor.execute("SELECT is_vip, location FROM users WHERE user_id = %s", (user_id,))
         row = cursor.fetchone()
+
         if not row or not row['is_vip']:
-            await message.answer("🚫 City-based matching is a VIP-only feature.")
+            await message.answer("💎 City-based matching is a VIP-only feature.\n""Become a /VIP member")
             return
 
         user_location = row['location']
@@ -800,44 +931,54 @@ async def search_by_city_handler(message: Message, bot: Bot):
             await message.answer("📍 Please share your location first using /setlocation.")
             return
 
-        city = user_location.strip()  # exact city string
-
         if user_id in current_chats:
             await message.answer("⚠️ You are already in a chat. Use /stop to end it first.")
             return
 
-        search_queue.append((user_id, time.time(), city))
-        searching_msg = await message.answer("🔍 Searching for a partner in your city...")
-
-        cursor.execute("""
-            SELECT user_id FROM users 
-            WHERE user_id != %s AND location = %s
-        """, (user_id, city))
-        available_users = cursor.fetchall()
-
-        available_users = [u['user_id'] for u in available_users if u['user_id'] not in current_chats]
-
-        if not available_users:
-            await bot.delete_message(chat_id=user_id, message_id=searching_msg.message_id)
-            await message.answer("😔 No users available in your city right now.")
+        if any(user_id == uid for uid, _, _ in search_queue):
+            await message.answer("⏳ You are already searching for a match...")
             return
 
-        partner_id = random.choice(available_users)
-        current_chats[user_id] = partner_id
-        current_chats[partner_id] = user_id
+        city = user_location.strip()
+        search_queue.append((user_id, time.time(), city))
 
+        searching_msg = await message.answer("🔍 Searching for a partner in your city...")
+
+        # ✅ Find a matching user in the same city who is also in the search queue and not in chat
+        for partner_id, _, partner_city in search_queue:
+            if partner_id != user_id and partner_city == city and partner_id not in current_chats:
+                # Match found
+                current_chats[user_id] = partner_id
+                current_chats[partner_id] = user_id
+
+                await bot.delete_message(chat_id=user_id, message_id=searching_msg.message_id)
+
+                await bot.send_message(partner_id, "✅ City match found! You are now chatting.\n\n/next — new partner\n/stop — end chat")
+                await message.answer("✅ City match found! You are now chatting.\n\n/next — new partner\n/stop — end chat")
+
+                # Remove both users from queue
+                search_queue[:] = [
+                    (uid, ts, loc) for uid, ts, loc in search_queue if uid not in (user_id, partner_id)
+                ]
+                return
+
+        # No match yet
         await bot.delete_message(chat_id=user_id, message_id=searching_msg.message_id)
-
-        await bot.send_message(partner_id, "✅ City match found! You are now chatting.")
-        await message.answer("✅ City match found! You are now chatting.")
-
-        # Clean search queue
-        search_queue[:] = [(uid, ts, loc) for uid, ts, loc in search_queue if uid not in (user_id, partner_id)]
+        await message.answer("😔 No users available in your city right now. You'll be matched when someone becomes available.")
 
     finally:
         cursor.close()
         conn.close()
 
+# Common handler logic
+async def handle_fallback(message: Message):
+    user_id = message.from_user.id
+
+    if user_id not in current_chats:
+        await message.answer(
+            "🤖 You're not in a chat right now.\n\n"
+            "Tap /Search to start chatting."
+        )
 @router.message(F.text)
 async def chat_handler(message: types.Message, bot: Bot):
     """Handles chat messages."""
@@ -854,6 +995,8 @@ async def photo_handler(message: types.Message, bot: Bot):
         partner_id = current_chats[user_id]
         await bot.send_photo(partner_id, message.photo[-1].file_id)
 
+
+  
 @router.message(F.video)
 async def video_handler(message: types.Message, bot: Bot):
     """Handles video messages."""
@@ -885,7 +1028,7 @@ async def animation_handler(message: types.Message, bot: Bot):
     if user_id in current_chats:
         partner_id = current_chats[user_id]
         await bot.send_animation(partner_id, message.animation.file_id)
-
+       
 @router.message(F.photo)
 async def payment_proof_handler(message: types.Message, bot: Bot):
     """Handles payment proof photo."""
@@ -944,6 +1087,7 @@ async def reject_vip_command(message: types.Message, bot: Bot):
     conn.close()
     await message.answer(f"User {user_id} VIP rejected.")
     await bot.send_message(user_id, "Your VIP request has been rejected.")
+    
 @router.message(F.voice)
 async def vip_voice_handler(message: types.Message, bot: Bot):
     """Handles VIP voice messages."""
@@ -959,7 +1103,7 @@ async def vip_voice_handler(message: types.Message, bot: Bot):
         partner_id = current_chats[user_id]
         await bot.send_voice(partner_id, message.voice.file_id)
     elif not is_vip:
-        await message.answer("This is a VIP feature. Become a VIP to use voice messages.")
+        await message.answer("This is a VIP feature. Become a /VIP to use voice messages.")
 
 @router.message(Command("voicecall"))
 async def voice_call_command(message: types.Message, bot: Bot):
@@ -977,7 +1121,7 @@ async def voice_call_command(message: types.Message, bot: Bot):
         await message.answer("📞 Initiating voice call (simulated).")
         await bot.send_message(partner_id, "📞 Incoming voice call (simulated).")
     elif not is_vip:
-        await message.answer("This is a VIP feature. Become a VIP to use voice calls.")
+        await message.answer("This is a /VIP feature. Become a VIP to use voice calls.")
     else:
         await message.answer("You are not currently in a chat.")
 async def create_tables():
@@ -1006,6 +1150,87 @@ async def create_tables():
     conn.commit()
     cursor.close()
     conn.close()
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+feedback_keyboard = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text="👍 Good", callback_data="feedback_good")],
+    [InlineKeyboardButton(text="👎 Bad", callback_data="feedback_bad")],
+    [InlineKeyboardButton(text="⚠️ Report", callback_data=f"feedback_report")]
+
+])
+@router.callback_query(F.data == "feedback_good")
+async def feedback_good(callback: CallbackQuery):
+    await callback.answer("Your feedback has been submitted successfully.", show_alert=True)
+
+    # Optional: Log or save feedback to DB here
+
+    try:
+        await callback.message.delete()  # Delete the whole message (text + buttons)
+    except Exception as e:
+        logging.error(f"Failed to delete feedback message: {e}")
+ # Remove inline buttons
+
+@router.callback_query(F.data == "feedback_bad")
+async def feedback_bad(callback: CallbackQuery):
+    await callback.answer("your feedback has been submitted successfully", show_alert=True)
+    # Optional: Save to DB or log it
+    try:
+        await callback.message.delete()  # Delete the whole message (text + buttons)
+    except Exception as e:
+        logging.error(f"Failed to delete feedback message: {e}")  
+
+@router.callback_query(F.data == "feedback_report")
+async def feedback_report(callback: CallbackQuery):
+    try:
+        await callback.message.edit_text(
+            text="⚠️ Please select a reason to report your partner:",
+            reply_markup=report_reasons_keyboard
+        )
+    except Exception as e:
+        logging.error(f"Failed to update message with report reasons: {e}")
+
+# Remove inline buttons
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+
+report_reasons_keyboard = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text="📢 Advertising", callback_data="report_advertising")],
+    [InlineKeyboardButton(text="💰 Selling", callback_data="report_selling")],
+    [InlineKeyboardButton(text="🧒 Child Porn", callback_data="report_childporn")],
+    [InlineKeyboardButton(text="🤲 Begging", callback_data="report_begging")],
+    [InlineKeyboardButton(text="😡 Insult", callback_data="report_insult")],
+    [InlineKeyboardButton(text="🪓 Violence", callback_data="report_violence")],
+    [InlineKeyboardButton(text="🧑🏽‍🦱 Racism", callback_data="report_racism")],
+    [InlineKeyboardButton(text="🤬 Vulgar Partner", callback_data="report_vulgar")],
+    [InlineKeyboardButton(text="🔙 Back", callback_data="feedback_keyboard")]
+])
+   
+
+@router.callback_query(F.data == "feedback_keyboard")
+async def handle_feedback_main(callback: CallbackQuery):
+    await callback.message.edit_reply_markup(reply_markup=feedback_keyboard)
+    await callback.answer()
+
+
+@router.callback_query(F.data.startswith("report_"))
+async def handle_report_reason(callback: CallbackQuery):
+    user_id = callback.from_user.id
+    reason = callback.data.replace("report_", "")
+    reported_id = 0  # Fake ID since we don't track partners yet
+
+    # Log or store report (optional)
+    print(f"[FAKE REPORT] User {user_id} reported UNKNOWN user for: {reason}")
+
+    # Optional: Save to DB if needed
+    # await db.execute(
+    #     "INSERT INTO reports (reporter_id, reported_id, reason) VALUES ($1, $2, $3)",
+    #     user_id, reported_id, reason
+    # )
+
+    try:
+        await callback.message.edit_text("✅ Your report has been submitted. Thank you!")
+    except Exception as e:
+        logging.error(f"Failed to send report confirmation: {e}")
+
+
 @router.message(Command("vip"))
 async def vip_command(message: Message):
     text = (
