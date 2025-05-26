@@ -386,7 +386,7 @@ async def gender_preference_callback(query: types.CallbackQuery, bot: Bot):
         )
 
         await bot.send_message(partner_id,
-            "✅ Partner found! Start chatting!\n\n"
+            "💎 VIP partner found! Start chatting!\n\n"
             "/next — find a new partner\n"
             "/stop — stop this chat"
         )
@@ -521,7 +521,7 @@ async def quick_vip_search(message: types.Message):
 
         if partner_id:
             await message.answer("✅ Partner found! Start chatting!\n\n/next — new partner\n/stop — end chat")
-            await message.bot.send_message(partner_id, "✅ Partner found! Start chatting!\n\n/next — new partner\n/stop — end chat")
+            await message.bot.send_message(partner_id, "💎 VIP partner found! Start chatting!\n\n/next — new partner\n/stop — end chat")
     else:
         await asyncio.sleep(20)
 
@@ -677,6 +677,7 @@ search_queue = []
 non_vip_search_locks = defaultdict(bool)
 current_chats = {}
 
+
 async def handle_non_vip_search(message: types.Message, bot: Bot):
     global search_queue, non_vip_search_locks, current_chats
     user_id = message.from_user.id
@@ -713,27 +714,34 @@ async def handle_non_vip_search(message: types.Message, bot: Bot):
             if partner_id:
                 current_chats.pop(partner_id, None)
                 await bot.send_message(partner_id, "Your partner has disconnected to search for someone new.")
-            await message.answer("You have been disconnected from your previous chat.use /search to find a partner")
+            await message.answer("You have been disconnected from your previous chat. Use /search to find a partner.")
 
         search_queue.append((user_id, time.time(), "any"))
         searching_message = await message.answer("🔍Searching for a partner...")
 
-        match_made = await find_match(user_id, "any", False)
+        # UPDATED: receive is_partner_vip too
+        match_made, is_partner_vip = await find_match(user_id, "any", False)
 
         if match_made:
             partner_id = current_chats.get(user_id)
             if partner_id:
                 await bot.delete_message(chat_id=message.chat.id, message_id=searching_message.message_id)
-                await message.answer("✅ Partner found!start chatting!\n\n"
-        "/next — find a new partner\n\n"
-        "/stop — stop this chat")
-                await bot.send_message(partner_id, "✅ Partner found!start chatting!\n\n"
-        "/next — find a new partner\n\n"
-        "/stop — stop this chat")
+
+                if is_partner_vip:
+                    await message.answer("💎 VIP partner found! Start chatting!\n\n"
+                                         "/next — find a new partner\n"
+                                         "/stop — stop this chat")
+                else:
+                    await message.answer("✅ Partner found! Start chatting!\n\n"
+                                         "/next — find a new partner\n"
+                                         "/stop — stop this chat")
+
+                await bot.send_message(partner_id, "✅ Partner found! Start chatting!\n\n"
+                                                   "/next — find a new partner\n"
+                                                   "/stop — stop this chat")
             non_vip_search_locks[user_id] = False
         
         else:
-            # ✅ Exit early if already matched or disconnected during wait
             if user_id not in search_queue or user_id in current_chats:
                 non_vip_search_locks[user_id] = False
                 return
@@ -747,8 +755,7 @@ async def handle_non_vip_search(message: types.Message, bot: Bot):
             elif user_id in current_chats:
                 await bot.delete_message(chat_id=message.chat.id, message_id=searching_message.message_id)
 
-    except Exception as e:
-        await message.answer("An error occurred during the search process. Please try again later.")
+    
     
     finally:
         non_vip_search_locks[user_id] = False
@@ -800,7 +807,7 @@ async def next_command(message: types.Message, bot: Bot):
         await bot.send_message(partner_id, "How was your experience with your last partner?", reply_markup=feedback_keyboard)
         await message.answer("How was your experience with your last partner?", reply_markup=feedback_keyboard)
     else:
-        await message.answer("You're not currently in a chat. Searching for a partner...")
+        await message.answer("You're not currently in a chat.")
 
     # ✅ 3. Check VIP status
     conn = await create_database_connection()
@@ -953,7 +960,7 @@ async def search_by_city_handler(message: Message, bot: Bot):
 
                 await bot.delete_message(chat_id=user_id, message_id=searching_msg.message_id)
 
-                await bot.send_message(partner_id, "✅ City match found! You are now chatting.\n\n/next — new partner\n/stop — end chat")
+                await bot.send_message(partner_id, "💎 VIP partner found! You are now chatting.\n\n/next — new partner\n/stop — end chat")
                 await message.answer("✅ City match found! You are now chatting.\n\n/next — new partner\n/stop — end chat")
 
                 # Remove both users from queue
