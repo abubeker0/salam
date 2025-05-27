@@ -225,19 +225,15 @@ match_lock = asyncio.Lock() # List to store searching users (user_id, timestamp,
 
  # Ensure function exits safely
 import asyncio
-
 find_match_lock = asyncio.Lock()
-
 async def find_match(user_id, gender_pref, is_vip):
     global current_chats, search_queue
 
     async with find_match_lock:
         try:
-            # Verify user is in queue
             if not any(uid == user_id for uid, _, _ in search_queue):
-                return False
+                return False, None  # 🔧 Return tuple
 
-            # Batch load info for all users in the queue
             user_ids = [uid for uid, _, _ in search_queue]
             conn = await create_database_connection()
             cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -251,7 +247,7 @@ async def find_match(user_id, gender_pref, is_vip):
             user_own_gender = user_info_map.get(user_id, {}).get('gender')
             if not user_own_gender:
                 print(f"DEBUG: User {user_id} has no gender set.")
-                return False
+                return False, None  # 🔧 Return tuple
 
             potential_partners = []
 
@@ -266,56 +262,50 @@ async def find_match(user_id, gender_pref, is_vip):
                 other_user_is_vip = other_user_row['is_vip']
                 other_user_gender = other_user_row['gender']
 
-                # For non-VIP users, override their stored preference to "any"
                 if not other_user_is_vip:
                     other_user_gender_pref = "any"
 
-                # Does current user like the other user?
                 i_like_them = (gender_pref == "any" or other_user_gender == gender_pref)
-
-                # Does other user like the current user?
                 they_like_me = (other_user_gender_pref == "any" or user_own_gender == other_user_gender_pref)
 
-                # Match conditions
                 if is_vip and other_user_is_vip:
                     if i_like_them and they_like_me:
-                        potential_partners.append((other_user_id, other_user_gender))
+                        potential_partners.append((other_user_id, other_user_is_vip))
                 elif is_vip and not other_user_is_vip:
                     if i_like_them:
-                        potential_partners.append((other_user_id, other_user_gender))
+                        potential_partners.append((other_user_id, other_user_is_vip))
                 elif not is_vip and other_user_is_vip:
                     if they_like_me:
-                        potential_partners.append((other_user_id, other_user_gender))
+                        potential_partners.append((other_user_id, other_user_is_vip))
                 else:
-                    potential_partners.append((other_user_id, other_user_gender))
+                    potential_partners.append((other_user_id, other_user_is_vip))
 
             if potential_partners:
-                partner_id, _ = random.choice(potential_partners)
+                partner_id, partner_is_vip = random.choice(potential_partners)
 
-                # Double-check both are still in queue
                 ids_in_queue = {uid for uid, _, _ in search_queue}
                 if user_id not in ids_in_queue or partner_id not in ids_in_queue:
-                    return False
+                    return False, None  # 🔧 Return tuple
 
-                # Remove matched users from queue
                 search_queue[:] = [
                     (uid, ts, gen) for uid, ts, gen in search_queue
                     if uid not in (user_id, partner_id)
                 ]
 
-                # Add to current chats
                 current_chats[user_id] = partner_id
                 current_chats[partner_id] = user_id
 
                 print(f"✅ MATCHED: {user_id} <-> {partner_id}")
-                return partner_id
+                return partner_id, partner_is_vip  # 🔧 Return tuple
 
-            return False
+            return False, None  # 🔧 No match
 
         except Exception as e:
             print(f"❌ ERROR in find_match(): {e}")
-            return False
+            return False, None  # 🔧 Ensure tuple on error
 
+
+  # 🔧 Ensure tuple on error
 
 
 async def handle_vip_search(message: types.Message, bot: Bot):
@@ -323,25 +313,24 @@ async def handle_vip_search(message: types.Message, bot: Bot):
        """Handles /search for VIP users."""
        await message.answer("Choose the gender you want to chat with:", reply_markup=gender_selection_keyboard())
 
+import asyncio
+
 @router.callback_query(F.data.startswith("gender_pref:"))
 async def gender_preference_callback(query: types.CallbackQuery, bot: Bot):
-    """Handles gender preference selection and initiates search for VIP users only."""
     global search_queue
     user_id = query.from_user.id
-    gender_pref = query.data.split(":")[1]  # User's preferred gender to chat with
+    gender_pref = query.data.split(":")[1]
 
-    # Remove the inline keyboard after selection
     await bot.delete_message(chat_id=query.message.chat.id, message_id=query.message.message_id)
 
-    # Clean up any existing chat
     if user_id in current_chats:
         partner_id = current_chats.pop(user_id, None)
         if partner_id and partner_id in current_chats:
             del current_chats[partner_id]
-            await bot.send_message(partner_id, "Your partner has disconnected.")
+            await bot.send_message(partner_id, "Your partner has disconnected.use /search to find a partner.")
         await query.message.answer("You were in a chat. Disconnected.")
 
-    # --- Check VIP status & gender ---
+    # --- DB Fetch ---
     conn = await create_database_connection()
     cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
@@ -362,23 +351,26 @@ async def gender_preference_callback(query: types.CallbackQuery, bot: Bot):
         return
 
     if not is_vip:
-        await query.message.answer("💎 Gender-based matching is a VIP-only feature.\n""Become a /VIP member")
+        await query.message.answer("💎 Gender-based matching is a VIP-only feature.\nBecome a /VIP member")
         return
-# Non-VIPs can't have gender preference
-   
 
+    # Add to queue
     search_queue.append((user_id, time.time(), gender_pref))
 
-    # Send "searching..." message
     searching_message = await query.message.answer("🔍 Searching for a partner...")
     searching_message_id = searching_message.message_id
 
-    # Attempt to find a match
-    partner_id = await find_match(user_id, gender_pref, is_vip)
+    # ⏱️ Try for 20 seconds in 1-second intervals
+    partner_id = None
+    for _ in range(20):
+        partner_id, _ = await find_match(user_id, gender_pref, is_vip)
+        if partner_id:
+            break
+        await asyncio.sleep(1)
+
+    await bot.delete_message(chat_id=query.message.chat.id, message_id=searching_message_id)
 
     if partner_id:
-        await bot.delete_message(chat_id=query.message.chat.id, message_id=searching_message_id)
-
         await query.message.answer(
             "✅ Partner found! Start chatting!\n\n"
             "/next — find a new partner\n"
@@ -390,8 +382,10 @@ async def gender_preference_callback(query: types.CallbackQuery, bot: Bot):
             "/next — find a new partner\n"
             "/stop — stop this chat"
         )
-   
+        return  # ✅ Exit early if match was found
 
+    # ❌ If no match found after 20 seconds
+    
 
         # Delete the partner's searching message (assuming you have this logic)
 async def get_partner_searching_message_id(partner_id: int) -> int | None:
@@ -491,7 +485,6 @@ async def search_command(message: types.Message,bot: Bot):
 async def quick_vip_search(message: types.Message):
     user_id = message.from_user.id
 
-    # ✅ Check if user is already in a chat
     if user_id in current_chats:
         await message.answer(
             "🤔 You are already in a dialog right now.\n"
@@ -500,41 +493,35 @@ async def quick_vip_search(message: types.Message):
         )
         return
 
-    # ✅ Send ONE search message and store it for deletion
     search_msg = await message.answer("🔍 Searching for a partner...")
 
-    # ✅ Clean old entries and append current user
     search_queue[:] = [(uid, ts, gen) for uid, ts, gen in search_queue if uid != user_id]
     search_queue.append((user_id, time.time(), "any"))
 
-    # ✅ Try to find a match
-    match_made = await find_match(user_id, "any", True)
+    timeout = 20
+    interval = 2
+    elapsed = 0
+    partner_id = None
 
-    if match_made:
-        partner_id = current_chats.get(user_id)
-
-        # ✅ Try to delete the search message
-        try:
-            await message.bot.delete_message(chat_id=message.chat.id, message_id=search_msg.message_id)
-        except Exception as e:
-            print(f"Failed to delete search message: {e}")
-
+    while elapsed < timeout:
+        partner_id, _ = await find_match(user_id, "any", True)
         if partner_id:
-            await message.answer("✅ Partner found! Start chatting!\n\n/next — new partner\n/stop — end chat")
-            await message.bot.send_message(partner_id, "💎 VIP partner found! Start chatting!\n\n/next — new partner\n/stop — end chat")
+            break
+        await asyncio.sleep(interval)
+        elapsed += interval
+
+    try:
+        await message.bot.delete_message(chat_id=message.chat.id, message_id=search_msg.message_id)
+    except Exception as e:
+        print(f"Failed to delete search message: {e}")
+
+    if partner_id:
+        await message.answer("✅ Partner found! Start chatting!\n\n/next — new partner\n/stop — end chat")
+        await message.bot.send_message(partner_id, "💎 VIP partner found! Start chatting!\n\n/next — new partner\n/stop — end chat")
     else:
-        await asyncio.sleep(20)
+        search_queue[:] = [(uid, ts, gen) for uid, ts, gen in search_queue if uid != user_id]
+        #await message.answer("🚫 No users available right now. You've been removed from the search queue.")
 
-        if user_id in search_queue and user_id not in current_chats:
-            search_queue[:] = [(uid, ts, gen) for uid, ts, gen in search_queue if uid != user_id]
-
-            # ✅ Try to delete the search message again if timeout
-            try:
-                await message.bot.delete_message(chat_id=message.chat.id, message_id=search_msg.message_id)
-            except Exception as e:
-                print(f"Failed to delete timeout message: {e}")
-
-            await message.answer("🚫 No users available right now. You've been removed from the search queue.")
 
     # Example stub: add to waiting queue, match logic, etc.
     # match_user(user_id)...
@@ -713,7 +700,7 @@ async def handle_non_vip_search(message: types.Message, bot: Bot):
             partner_id = current_chats.pop(user_id, None)
             if partner_id:
                 current_chats.pop(partner_id, None)
-                await bot.send_message(partner_id, "Your partner has disconnected to search for someone new.")
+                await bot.send_message(partner_id, "Your partner has disconnected to /search for someone new.")
             await message.answer("You have been disconnected from your previous chat. Use /search to find a partner.")
 
         search_queue.append((user_id, time.time(), "any"))
@@ -1201,11 +1188,11 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 report_reasons_keyboard = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text="📢 Advertising", callback_data="report_advertising")],
     [InlineKeyboardButton(text="💰 Selling", callback_data="report_selling")],
-    [InlineKeyboardButton(text="🧒 Child Porn", callback_data="report_childporn")],
+    [InlineKeyboardButton(text="🔞", callback_data="report_childporn")],
     [InlineKeyboardButton(text="🤲 Begging", callback_data="report_begging")],
     [InlineKeyboardButton(text="😡 Insult", callback_data="report_insult")],
     [InlineKeyboardButton(text="🪓 Violence", callback_data="report_violence")],
-    [InlineKeyboardButton(text="🧑🏽‍🦱 Racism", callback_data="report_racism")],
+    [InlineKeyboardButton(text="🌍 Racism", callback_data="report_racism")],
     [InlineKeyboardButton(text="🤬 Vulgar Partner", callback_data="report_vulgar")],
     [InlineKeyboardButton(text="🔙 Back", callback_data="feedback_keyboard")]
 ])
