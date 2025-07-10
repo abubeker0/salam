@@ -1,57 +1,46 @@
-from aiogram import Router, F, Bot
-from aiogram.filters import CommandStart, Command
-from aiogram.types import (
-    InlineKeyboardMarkup,
-    InlineKeyboardButton,
-    ReplyKeyboardRemove,
-    BotCommand,
-)
-import psycopg2
-import psycopg2.extras
-from psycopg2 import connect, extras
-import webhook.config as config
-import random
-from aiogram import types, Router, F
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, InputFile
-
-import aiofiles
 import os
 import uuid
-import logging
 import time
+import random
+import logging
 import asyncio
-from aiogram import Bot, Router, F
-from aiogram.types import Message, CallbackQuery
-from aiogram.filters import Command
-from aiogram.utils.keyboard import InlineKeyboardBuilder
-import asyncpg
-from .config import CHAPA_SECRET_KEY, CHAPA_BASE_URL, CHAPA_CALLBACK_URL, WEBHOOK_PATH, CHAPA_VERIFY_URL, BASE_WEBHOOK_URL, WEB_SERVER_HOST, WEB_SERVER_PORT
-from aiogram.types import FSInputFile
+import aiofiles
 import aiohttp
-from aiogram.types import (
-    InlineKeyboardMarkup,
-    InlineKeyboardButton,
-    LabeledPrice,
-    PreCheckoutQuery,  # <--- Make sure this is present!
-    SuccessfulPayment,  # <--- Make sure this is present!
-    Message,
-    CallbackQuery)
-import uuid
+import asyncpg
+import psycopg2
+import psycopg2.extras
+
+from datetime import datetime, timedelta, timezone, date
+from collections import defaultdict
+from aiohttp import web, ClientSession, ClientError
+from aiogram import Bot, Router, F, types
+from aiogram.types import (Message, CallbackQuery, ReplyKeyboardRemove,
+                           ReplyKeyboardMarkup, KeyboardButton,
+                           InlineKeyboardMarkup, InlineKeyboardButton,
+                           FSInputFile, LabeledPrice, PreCheckoutQuery,
+                           SuccessfulPayment, BotCommand)
+from aiogram.utils.keyboard import InlineKeyboardBuilder
+from aiogram.filters import CommandStart, Command
+from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
-from aiohttp import web
+from aiogram.enums import ParseMode
 from aiogram.webhook.aiohttp_server import SimpleRequestHandler
-import time  # This line should be present
-from datetime import datetime, timezone
+from datetime import datetime
+import webhook.config as config
+from .config import (CHAPA_SECRET_KEY, CHAPA_BASE_URL, CHAPA_CALLBACK_URL,
+                     WEBHOOK_PATH, CHAPA_VERIFY_URL, BASE_WEBHOOK_URL,
+                     WEB_SERVER_HOST, WEB_SERVER_PORT)
 
-now = datetime.now(timezone.utc)
-
+# Logger setup
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO)
 
+# Global router instance
 router = Router()
+
+# Other global variables
+now = datetime.now(timezone.utc)
 vip_search_locks = {}
 
 
@@ -89,6 +78,7 @@ async def set_commands(bot: Bot):
         types.BotCommand(command="credit", description="💰 Earn credit"),
         types.BotCommand(command="userid",
                          description="🆔 Display your user ID"),
+        types.BotCommand(command="privacy", description="📜 View privacy,Terms and Conditions"),                 
     ]
     await bot.set_my_commands(commands)
 
@@ -100,16 +90,6 @@ def location_keyboard():
     ]],
                                      resize_keyboard=True,
                                      one_time_keyboard=True)
-
-
-from aiogram import Router, types, F, Bot
-from aiogram.types import ReplyKeyboardRemove
-#Import the function
-
-router = Router()
-
-import aiohttp
-from aiogram.types import ReplyKeyboardRemove
 
 
 async def get_city_from_coords(lat, lon):
@@ -195,7 +175,7 @@ def gender_keyboard(context="start"):
 def location_keyboard():
     """Creates a reply keyboard for location sharing."""
     keyboard = ReplyKeyboardMarkup(keyboard=[[
-        KeyboardButton(text="Share Location", request_location=True)
+        KeyboardButton(text="📍 Share Location", request_location=True)
     ]],
                                    resize_keyboard=True,
                                    one_time_keyboard=True)
@@ -234,6 +214,7 @@ async def cmd_start(message: types.Message, bot: Bot):
                                message.from_user.id)
             await message.answer(
                 "👋 Welcome to the Anonymous Chat Bot! Let's get you set up.\n\n"
+                "By using this bot, you confirm you're 18+ and agree to our Terms and Conditions (/privacy).\n\n"
                 "Please select your gender:",
                 reply_markup=gender_keyboard())
             logger.info("Sent gender keyboard.")
@@ -395,7 +376,7 @@ async def find_match(user_id, gender_pref, is_vip):
     conn = None
     try:
         async with find_match_lock:
-            # Check if user is still in the queue (might have been matched by another call)
+            # Check if user is still in the queue (might have been matched already)
             if not any(uid == user_id for uid, _, _ in search_queue):
                 logger.debug(
                     f"User {user_id} no longer in search_queue at start of find_match."
@@ -416,6 +397,7 @@ async def find_match(user_id, gender_pref, is_vip):
             if not user_own_gender:
                 logger.warning(
                     f"User {user_id} has no gender set, cannot match.")
+                # Remove user from queue since can't match properly
                 search_queue[:] = [(uid, ts, gen)
                                    for uid, ts, gen in search_queue
                                    if uid != user_id]
@@ -504,7 +486,24 @@ async def find_match(user_id, gender_pref, is_vip):
 
             if potential_partners:
                 partner_id, partner_is_vip = random.choice(potential_partners)
-                # ... rest of match logic ...
+
+                # Confirm both users are still in queue before finalizing match
+                current_queue_user_ids = [uid for uid, _, _ in search_queue]
+                if user_id not in current_queue_user_ids or partner_id not in current_queue_user_ids:
+                    logger.warning(
+                        f"One of the matched users is no longer in the queue: {user_id}, {partner_id}"
+                    )
+                    return None, None
+
+                # Remove both users from search queue
+                search_queue[:] = [(uid, ts, gen)
+                                   for uid, ts, gen in search_queue
+                                   if uid != user_id and uid != partner_id]
+
+                # Add matched users to current chats
+                current_chats[user_id] = partner_id
+                current_chats[partner_id] = user_id
+
                 logger.info(
                     f"MATCHED: {user_id} <-> {partner_id} (VIP:{is_vip} vs PartnerVIP:{partner_is_vip})"
                 )
@@ -543,7 +542,7 @@ async def gender_preference_callback(query: types.CallbackQuery, bot: Bot):
     # Check if user is already in the search queue
     if any(uid == user_id for uid, _, _ in search_queue):
         await query.message.answer(
-            "⏳ You are already in the search queue. Please wait for your current search to complete."
+            "⏳ You are already in the search queue. Please wait for your current search to complete. or you can /stop "
         )
         await bot.delete_message(chat_id=query.message.chat.id,
                                  message_id=query.message.message_id)
@@ -598,7 +597,7 @@ async def gender_preference_callback(query: types.CallbackQuery, bot: Bot):
         # Ensure only VIPs can use gender preferences
         if not is_vip:
             await query.message.answer(
-                "💎 Gender-based matching is a VIP-only feature.\nBecome a /VIP member"
+                "💎 Gender-based matching is a VIP-only feature.\nBecome a /vip member"
             )
             logger.info(
                 f"Non-VIP user {user_id} tried to use gender preference for search."
@@ -816,7 +815,7 @@ async def quick_vip_search(message: types.Message):
     # Check if user is already in the search queue
     if any(uid == user_id for uid, _, _ in search_queue):
         await message.answer(
-            "⏳ You are already in the search queue. Please wait for your current search to complete."
+            "⏳ You are already in the search queue. Please wait for your current search to complete.or you can /stop"
         )
         return
     # --- END SIMPLIFIED COOLDOWN CHECK ---
@@ -905,7 +904,7 @@ async def stop_command(message: types.Message, bot: Bot):
     logger.info(f"Stop command from {user_id}. Current chats: {current_chats}")
 
     if user_id not in current_chats:
-        await message.answer("You are not in an active chat.")
+        await message.answer("You are not in an active chat./search to find partner. ")
         logger.info(f"{user_id} is not in current_chats.")
         # Remove user from search queue if they were searching
         search_queue[:] = [(uid, ts, gen) for uid, ts, gen in search_queue
@@ -1052,12 +1051,6 @@ async def update_user_credits(user_id, credits, last_search_date,
 # Assuming router is initialized, e.g., router = Router()
 
 
-from aiogram import types
-from aiogram.types import FSInputFile
-import logging
-
-logger = logging.getLogger(__name__)
-
 @router.message(Command("credit"))
 async def credit_command(message: types.Message):
     """Handles the /credit command."""
@@ -1067,62 +1060,40 @@ async def credit_command(message: types.Message):
         user_data = await get_user_credits(user_id)  # Get current user data
         new_credits = user_data['credits'] + 10  # Add 10 credits
 
-        await update_user_credits(
-            user_id,
-            new_credits,
-            user_data['last_search_date'],
-            user_data['search_count']
-        )
+        await update_user_credits(user_id, new_credits,
+                                  user_data['last_search_date'],
+                                  user_data['search_count'])
 
         # Send an image showing the credit reward visually
         photo = FSInputFile("media/download.png")
-  # Use your actual image file
-        await message.answer_photo(
-            photo=photo,
-            caption="🎉 You just earned credits!",
-            parse_mode="HTML"
-        )
+        # Use your actual image file
+        await message.answer_photo(photo=photo, parse_mode="HTML")
 
         # Then send the actual credit update message
         await message.answer(
-            f"💰 You earned 10 credits!\nYour total credits: {new_credits}"
-        )
+            f"💰 You earned 10 credits!\nYour total credits: {new_credits}")
 
         logger.info(f"User {user_id} added 10 credits. Total: {new_credits}")
 
     except Exception as e:
         logger.error(
             f"Error processing /credit command for user {user_id}: {e}",
-            exc_info=True
-        )
+            exc_info=True)
         await message.answer(
             "❌ An error occurred while adding credits. Please try again later."
         )
 
 
-from collections import defaultdict
-import datetime
-import asyncio
-import time  # Ensure 'time' module is imported for time.time()
-import logging  # Ensure 'logging' is imported
-
-from aiogram.types import Message
-from aiogram import Bot, types  # Ensure 'types' is imported from aiogram
-from datetime import date
-
 # Initialize global variables at module level (as provided by you)
 search_queue = []
 non_vip_search_locks = defaultdict(bool)
-current_chats = {}
+
 
 # Assume get_user_credits, update_user_credits, and find_match are defined and corrected elsewhere
 # Example placeholders if they are in other files:
 # from .db_operations import get_user_credits, update_user_credits
 # from .matchmaking import find_match
-
-logger = logging.getLogger(__name__)  # Initialize logger
-
-
+# Initialize logger
 async def handle_non_vip_search(message: types.Message, bot: Bot):
     global search_queue, non_vip_search_locks, current_chats
     user_id = message.from_user.id
@@ -1130,7 +1101,7 @@ async def handle_non_vip_search(message: types.Message, bot: Bot):
 
     if non_vip_search_locks[user_id]:  # defaultdict will handle new keys
         await message.answer(
-            "Please wait for your previous search request to finish.")
+            "Please wait for your previous search request to finish.or /stop to cancel")
         logger.info(
             f"User {user_id} tried to search while another search was active.")
         return
@@ -1192,11 +1163,15 @@ async def handle_non_vip_search(message: types.Message, bot: Bot):
         )
 
         # Add user to search queue
-        search_queue.append((user_id, time.time(), "any"))
-        searching_message = await message.answer("🔍Searching for a partner...")
-        logger.info(f"User {user_id} added to search queue.")
+        # Atomically add to queue and find match to avoid race condition
+        async with find_match_lock:
+            search_queue.append((user_id, time.time(), "any"))
+            logger.info(
+                f"User {user_id} added to search queue inside locked block.")
 
-        # Try to find a match immediately
+        searching_message = await message.answer("🔍Searching for a partner...")
+
+        # Try to find a match immediately (outside lock to avoid holding it too long)
         match_made, is_partner_vip = await find_match(user_id, "any", False)
 
         # If no match found immediately, wait for a timeout
@@ -1418,6 +1393,89 @@ async def next_command(message: types.Message, bot: Bot):
 #@router.message(Command("vip"))
 #async def show_vip_options(message: types.Message):
 #await message.answer("Choose your VIP plan:", reply_markup=payment_method_keyboard)
+@router.message(Command("privacy"))
+async def send_privacy(message: types.Message):
+    await message.answer(PRIVACY_POLICY)
+PRIVACY_POLICY = """
+🔒 *Privacy Policy & Terms – Anonymous Chat Bot*
+*Effective Date:* July 10, 2025
+
+This document explains how *Anonymous Chat Bot* ("we", "our", "the Bot") collects, uses, and protects your data, and the terms you agree to by using the Bot.
+
+_By using this bot, you confirm that you are 18+ and agree to all of the following terms and privacy practices. If you do not agree, please stop using the bot._
+
+━━━━━━━━━━━━━━━  
+*1. Eligibility*  
+• You must be *at least 18 years old* to use this bot.  
+• If you're under 18, do not use the bot.
+
+━━━━━━━━━━━━━━━  
+*2. Information We Collect*  
+We may collect the following data:
+- 📍 Location (if shared)
+- 🚻 Gender
+- 🎂 Age or age range
+- 💎 VIP status and payments (if applicable)
+- 🆔 Telegram user ID and username
+- ⚙️ Match preferences
+- 🕒 Basic usage metadata (e.g., timestamps, match attempts)
+
+We *do NOT store* or read chat messages between users.
+
+━━━━━━━━━━━━━━━  
+*3. How Your Data is Used*  
+Your data is used to:
+- Match users based on preferences
+- Provide and manage VIP features
+- Prevent spam and abuse
+- Improve bot quality and safety
+
+━━━━━━━━━━━━━━━  
+*4. Data Security*  
+- Data is stored securely on [your hosting provider]  
+- Access is restricted to authorized staff only  
+- We implement technical safeguards against misuse
+
+━━━━━━━━━━━━━━━  
+*5. User Rules (Terms)*  
+• No harassment, spam, threats, illegal content  
+• Do not impersonate others or violate Telegram rules  
+• Violators may be banned without warning
+
+━━━━━━━━━━━━━━━  
+*6. Data Sharing*  
+We do *not* sell or share your data, except:
+- If required by law
+- To prevent fraud or threats
+
+━━━━━━━━━━━━━━━  
+*7. International Users*  
+Your data may be stored in or transferred to countries with different data protection laws.
+
+━━━━━━━━━━━━━━━  
+*8. Your Rights*  
+You can:
+- View or correct your data
+- Delete your data at any time with `/delete`
+- Stop using the bot any time
+
+━━━━━━━━━━━━━━━  
+*9. Consent*  
+By using this bot, you confirm:
+- You are 18 or older  
+- You consent to this Privacy Policy and Terms  
+- You understand how your data is handled
+
+━━━━━━━━━━━━━━━  
+*10. Changes to Policy*  
+We may update this policy. Material changes will be announced via the bot. Continued use = acceptance.
+
+━━━━━━━━━━━━━━━  
+*11. Contact*  
+For privacy or legal concerns:  
+📧 Email: your@  
+📩 Telegram: @
+"""
 
 
 @router.message(Command("vip"))
@@ -1439,7 +1497,10 @@ async def vip_command(message: Message):
             logger.info(
                 f"User {user_id} tried to become VIP but already has access.")
             return
+        gif = FSInputFile(
+            r"media/Unlock VIP Access.gif")  # Use raw string for Windows path
 
+        await message.answer_animation(animation=gif, parse_mode="HTML")
         # Show payment options
         text = ("<b>💎 Become a VIP User</b>\n"
                 "Support the chat and unlock premium features instantly.\n\n"
@@ -1493,9 +1554,6 @@ async def get_user_by_id(user_id):
             await conn.close()
 
 
-from aiogram.fsm.state import State, StatesGroup
-
-
 class SettingsStates(StatesGroup):
     waiting_for_age = State()  # This line needs to be indented
 
@@ -1545,6 +1603,12 @@ async def age_input_handler(message: types.Message, state: FSMContext):
         logger.warning(f"User {user_id} entered non-numeric age: '{text}'.")
 
 
+# Get the logger from the main application
+
+# Helper function to convert date to timezone-aware datetime for comparison
+
+
+# Globals
 @router.message(lambda message: message.text == "🏙️ Search by City")
 async def search_by_city_handler(message: Message, bot: Bot):
     user_id = message.from_user.id
@@ -1554,22 +1618,24 @@ async def search_by_city_handler(message: Message, bot: Bot):
         conn = await create_database_connection()
         if not conn:
             logger.error("Failed to connect to DB in search_by_city_handler.")
-            await message.answer("An internal error occurred. Please try again later.")
-            return
-
-        # Fetch VIP status and location for the initiating user
-        initiating_user_row = await conn.fetchrow(
-            "SELECT is_vip, vip_expires_at, location FROM users WHERE user_id = $1", user_id)
-
-        if not initiating_user_row or not initiating_user_row['is_vip'] or \
-           (initiating_user_row['vip_expires_at'] and initiating_user_row['vip_expires_at'] < datetime.datetime.now(datetime.timezone.utc)):
             await message.answer(
-                "💎 City-based matching is a **VIP-only feature**.\n"
-                "Become a /VIP member to unlock it!")
-            logger.info(f"User {user_id} tried city search without active VIP.")
+                "An internal error occurred. Please try again later.")
             return
 
-        user_location = initiating_user_row['location']
+        user_row = await conn.fetchrow(
+            "SELECT is_vip, vip_expires_at, location FROM users WHERE user_id = $1",
+            user_id)
+
+        if not user_row or not user_row['is_vip'] or \
+           (user_row['vip_expires_at'] and user_row['vip_expires_at'] < datetime.now(timezone.utc)):
+            await message.answer(
+                "💎 City-based matching is a **VIP-only feature**.\nBecome a /vip member to unlock it!"
+            )
+            logger.info(
+                f"User {user_id} tried city search without active VIP.")
+            return
+
+        user_location = user_row['location']
         if not user_location:
             await message.answer(
                 "📍 Please share your location first using the /setlocation command."
@@ -1580,7 +1646,7 @@ async def search_by_city_handler(message: Message, bot: Bot):
 
         if user_id in current_chats:
             await message.answer(
-                "⚠️ You're already in a chat. Use /stop to end it first before searching for a new partner."
+                "⚠️ You're already in a chat. Use /stop to end it first before searching."
             )
             logger.info(
                 f"User {user_id} tried city search while in an active chat.")
@@ -1588,7 +1654,7 @@ async def search_by_city_handler(message: Message, bot: Bot):
 
         if any(user_id == uid for uid, _, _ in search_queue):
             await message.answer(
-                "⏳ You're already searching for a match. Please wait or use /stop if you want to cancel."
+                "⏳ You're already searching. Please wait or use /stop to cancel."
             )
             logger.info(
                 f"User {user_id} tried city search but is already in the queue."
@@ -1597,12 +1663,9 @@ async def search_by_city_handler(message: Message, bot: Bot):
 
         city = user_location.strip()
 
-        # Remove user from queue if they somehow ended up there from a previous search
-        search_queue[:] = [(uid, ts, criterion)
-                           for uid, ts, criterion in search_queue
+        # Remove any previous presence in queue
+        search_queue[:] = [(uid, ts, loc) for uid, ts, loc in search_queue
                            if uid != user_id]
-
-        # Add user to the search queue with their city as the criterion
         search_queue.append((user_id, time.time(), city))
         logger.info(
             f"User {user_id} added to city search queue for city: {city}.")
@@ -1612,84 +1675,82 @@ async def search_by_city_handler(message: Message, bot: Bot):
 
         match_found = False
         partner_id = None
-        partner_is_vip = False # Track partner's VIP status
+        partner_is_vip = False
 
-        # Iterate through a shuffled copy of the queue
         shuffled_queue = list(search_queue)
         random.shuffle(shuffled_queue)
 
+        # 1. First try matching with a VIP user
         for p_id, _, p_city in shuffled_queue:
             if p_id != user_id and p_city == city and p_id not in current_chats:
-                # Found a potential partner, now check their VIP status
                 partner_row = await conn.fetchrow(
-                    "SELECT is_vip, vip_expires_at FROM users WHERE user_id = $1", p_id)
-
+                    "SELECT is_vip, vip_expires_at FROM users WHERE user_id = $1",
+                    p_id)
                 if partner_row and partner_row['is_vip'] and \
-                   (partner_row['vip_expires_at'] and partner_row['vip_expires_at'] > datetime.datetime.now(datetime.timezone.utc)):
+                   (partner_row['vip_expires_at'] and partner_row['vip_expires_at'] > datetime.now(timezone.utc)):
                     partner_id = p_id
                     partner_is_vip = True
                     match_found = True
-                    break # Found a VIP partner, prioritize and break
-                elif partner_row and not partner_row['is_vip']:
-                     # If you want to allow VIP to match with non-VIP:
-                     # Uncomment the following to allow regular matches
-                     # This logic assumes VIP-to-VIP is preferred, but non-VIP is fallback
-                    # partner_id = p_id
-                    # partner_is_vip = False # Explicitly set to false
-                    # match_found = True
-                    # break
-                    continue # Skip non-VIP users if you only want VIP-VIP matches
-                else:
-                    # Partner is not found, or not VIP, or VIP expired
-                    continue
+                    break
+
+        # 2. If no VIP found, try matching with a non-VIP user
+        if not match_found:
+            for p_id, _, p_city in shuffled_queue:
+                if p_id != user_id and p_city == city and p_id not in current_chats:
+                    partner_row = await conn.fetchrow(
+                        "SELECT is_vip FROM users WHERE user_id = $1", p_id)
+                    if partner_row and not partner_row['is_vip']:
+                        partner_id = p_id
+                        partner_is_vip = False
+                        match_found = True
+                        break
 
         if match_found:
             current_chats[user_id] = partner_id
             current_chats[partner_id] = user_id
             logger.info(
-                f"City match found: {user_id} and {partner_id} in {city}. Partner VIP: {partner_is_vip}.")
+                f"City match: {user_id} matched with {partner_id} in {city}. Partner VIP: {partner_is_vip}"
+            )
 
             try:
-                await bot.delete_message(chat_id=user_id, message_id=searching_msg.message_id)
+                await bot.delete_message(chat_id=user_id,
+                                         message_id=searching_msg.message_id)
             except Exception as e:
-                logger.error(f"Failed to delete search message for user {user_id}: {e}")
+                logger.error(
+                    f"Failed to delete search message for user {user_id}: {e}")
 
-            # Define messages based on VIP status
-            if partner_is_vip:
-                user_message = "💎 **VIP City Match Found!** You're now chatting with another **VIP** member in your city. Enjoy your premium conversation!\n\n"
-                partner_message = "💎 **VIP City Match Found!** You're now chatting with another **VIP** member in your city. Enjoy your premium conversation!\n\n"
-            else:
-                # This branch would only be hit if you change the matching logic to allow VIP to match non-VIP
-                user_message = "🏙️ **City Match Found!** You're now chatting with someone in your city.\n\n"
-                partner_message = "🏙️ **City Match Found!** You're now chatting with someone in your city.\n\n"
-
+            message_text = (
+                "💎 **VIP City Match Found!** You're now chatting with another **VIP** member in your city.\n\n"
+                if partner_is_vip else
+                "🏙️ **City Match Found!** You're now chatting with someone in your city.\n\n"
+            )
 
             await bot.send_message(
                 partner_id,
-                partner_message + "/next — find a new partner\n/stop — end chat",
+                message_text + "/next — find a new partner\n/stop — end chat",
                 parse_mode=ParseMode.HTML)
             await message.answer(
-                user_message + "/next — find a new partner\n/stop — end chat",
+                message_text + "/next — find a new partner\n/stop — end chat",
                 parse_mode=ParseMode.HTML)
 
-            # Remove both users from the search queue
             search_queue[:] = [(uid, ts, loc) for uid, ts, loc in search_queue
                                if uid not in (user_id, partner_id)]
             return
 
         else:
             try:
-                await bot.delete_message(chat_id=user_id, message_id=searching_msg.message_id)
+                await bot.delete_message(chat_id=user_id,
+                                         message_id=searching_msg.message_id)
             except Exception as e:
                 logger.error(
-                    f"Failed to delete search message for user {user_id} when no immediate match: {e}"
+                    f"Failed to delete search message for user {user_id} (no match): {e}"
                 )
 
             await message.answer(
-                "😔 No other active **VIP members** available in your city right now. You'll remain in the search queue and be matched when someone becomes available."
+                "😔 No active users are available in your city right now. You'll stay in the search queue and be matched as soon as someone nearby becomes available."
             )
             logger.info(
-                f"No immediate VIP city match for {user_id} in {city}. User remains in queue."
+                f"No match found for user {user_id} in {city}. Remaining in queue."
             )
 
     except Exception as e:
@@ -1701,7 +1762,7 @@ async def search_by_city_handler(message: Message, bot: Bot):
         )
     finally:
         if conn:
-            await conn.close() # Ensure the database connection is closed.
+            await conn.close()
 
 
 # Common handler logic
@@ -1904,7 +1965,12 @@ async def create_tables():
                 is_vip BOOLEAN DEFAULT FALSE,
                 subscription_expiry TIMESTAMP,
                 pending_vip BOOLEAN DEFAULT FALSE,
-                credit INTEGER DEFAULT 0
+                credit INTEGER DEFAULT 0,
+                vip_expires_at TIMESTAMP WITH TIME ZONE,
+                last_search_date DATE,
+                search_count INTEGER DEFAULT 0,
+                vip_plan TEXT,
+                notified_before_expiry BOOLEAN DEFAULT FALSE  
             );
             CREATE TABLE IF NOT EXISTS subscription_requests (
                 request_id SERIAL PRIMARY KEY,
@@ -1942,8 +2008,6 @@ async def create_tables():
         if conn:
             await conn.close()  # Close the connection when done
 
-
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 feedback_keyboard = InlineKeyboardMarkup(inline_keyboard=[[
     InlineKeyboardButton(text="👍 Good", callback_data="feedback_good")
@@ -1992,7 +2056,6 @@ async def feedback_report(callback: CallbackQuery):
 
 
 # Remove inline buttons
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 report_reasons_keyboard = InlineKeyboardMarkup(inline_keyboard=[
     [
@@ -2039,38 +2102,6 @@ async def handle_report_reason(callback: CallbackQuery):
             "✅ Your report has been submitted. Thank you!")
     except Exception as e:
         logging.error(f"Failed to send report confirmation: {e}")
-
-
-from aiogram.types import FSInputFile, Message
-from aiogram.utils.keyboard import InlineKeyboardBuilder
-from aiogram import Router
-from aiogram.filters import Command
-
-router = Router()
-
-@router.message(Command("vip"))
-async def vip_command(message: Message):
-    # Step 1: Send the GIF or short video
-    gif = FSInputFile(r"media\Unlock VIP Access.gif")  # Use raw string for Windows path
-
-    await message.answer_animation(
-        animation=gif,
-        caption="💎 Unlock VIP Access",
-        parse_mode="HTML"
-    )
-
-    # Step 2: Send the main text and payment buttons
-    text = (
-        "<b>💎 Become a VIP User</b>\n"
-        "Support the chat and unlock premium features instantly.\n\n"
-        "<b>Choose your preferred payment method:</b>"
-    )
-
-    builder = InlineKeyboardBuilder()
-    builder.button(text="🧾 Telegram Payments", callback_data="pay_telegram")
-    builder.button(text="💳 Chapa Payments", callback_data="pay_chapa")
-
-    await message.answer(text, reply_markup=builder.as_markup(), parse_mode="HTML")
 
 
 @router.callback_query(F.data == "pay_telegram")
@@ -2206,47 +2237,45 @@ async def handle_chapa_plan(callback: CallbackQuery):
 
 
 # Assuming this is in db_utils.py or handlers.py
-import datetime
-import logging
-from datetime import timedelta
 # You'll need your database connection function here
 # from .db_utils import create_database_connection # Example import if in a separate file
 
-logger = logging.getLogger(__name__)
 
 # --- Your existing calculate_expiry_date function ---
-def calculate_expiry_date(plan: str) -> datetime.datetime:
+def calculate_expiry_date(plan: str) -> datetime:
     """
     Calculates the VIP subscription expiry date based on the plan name.
     """
-    now = datetime.datetime.now(datetime.timezone.utc) # Use UTC for consistency
+    now = datetime.now(timezone.utc)  # Use UTC for consistency
 
-    if "1 Week VIP" in plan or "7 Days VIP" in plan: # Added 7 Days VIP for Chapa consistency
+    if "1 Week VIP" in plan or "7 Days VIP" in plan:  # Added 7 Days VIP for Chapa consistency
         return now + timedelta(days=7)
-    elif "1 Month VIP" in plan or "30 Days VIP" in plan: # Added 30 Days VIP
+    elif "1 Month VIP" in plan or "30 Days VIP" in plan:  # Added 30 Days VIP
         return now + timedelta(days=30)
     elif "3 Months VIP" in plan or "90 Days VIP" in plan:
         return now + timedelta(days=90)
     elif "6 Months VIP" in plan or "180 Days VIP" in plan:
         return now + timedelta(days=180)
-    elif "1 Year VIP" in plan or "365 Days VIP" in plan: # Added 365 Days VIP
+    elif "1 Year VIP" in plan or "365 Days VIP" in plan:  # Added 365 Days VIP
         return now + timedelta(days=365)
     logger.warning(f"Unknown VIP plan '{plan}'. Defaulting to 7 days expiry.")
     return now + timedelta(days=7)
 
 
-async def grant_vip_access(user_id: int, source_type: str, payment_detail: str) -> bool:
+async def grant_vip_access(user_id: int, source_type: str,
+                           payment_detail: str) -> bool:
     """
     Grants VIP access to a user based on the payment source (Chapa or Telegram Stars)
     and the relevant payment detail (duration for Chapa, payload for Stars).
     This function *must* interact with your database to update VIP status.
     """
-    conn = None # Initialize connection
+    conn = None  # Initialize connection
     try:
-        logger.info(f"Attempting to grant VIP to user {user_id} via {source_type}.")
+        logger.info(
+            f"Attempting to grant VIP to user {user_id} via {source_type}.")
 
         expiry_date = None
-        plan_name_for_calc = "" # This will be used to pass to calculate_expiry_date
+        plan_name_for_calc = ""  # This will be used to pass to calculate_expiry_date
 
         if source_type == 'chapa':
             try:
@@ -2260,14 +2289,20 @@ async def grant_vip_access(user_id: int, source_type: str, payment_detail: str) 
                 elif duration_days == 180: plan_name_for_calc = "180 Days VIP"
                 elif duration_days == 365: plan_name_for_calc = "365 Days VIP"
                 else:
-                    logger.error(f"Unknown Chapa duration: '{duration_days}'. Cannot map to VIP plan.")
+                    logger.error(
+                        f"Unknown Chapa duration: '{duration_days}'. Cannot map to VIP plan."
+                    )
                     return False
 
                 expiry_date = calculate_expiry_date(plan_name_for_calc)
-                logger.info(f"VIP duration from Chapa: {duration_days} days. Raw expiry: {expiry_date}")
+                logger.info(
+                    f"VIP duration from Chapa: {duration_days} days. Raw expiry: {expiry_date}"
+                )
 
             except ValueError:
-                logger.error(f"Invalid duration_days for Chapa: '{payment_detail}'. Cannot grant VIP.")
+                logger.error(
+                    f"Invalid duration_days for Chapa: '{payment_detail}'. Cannot grant VIP."
+                )
                 return False
 
         elif source_type == 'telegram_stars':
@@ -2279,42 +2314,58 @@ async def grant_vip_access(user_id: int, source_type: str, payment_detail: str) 
             elif payment_detail == "premium_year_sub":
                 plan_name_for_calc = "1 Year VIP"
             else:
-                logger.error(f"Unknown Telegram Stars payload: '{payment_detail}'. Cannot determine VIP duration.")
+                logger.error(
+                    f"Unknown Telegram Stars payload: '{payment_detail}'. Cannot determine VIP duration."
+                )
                 return False
 
             expiry_date = calculate_expiry_date(plan_name_for_calc)
-            logger.info(f"VIP duration from Telegram Stars payload '{payment_detail}' determined as {plan_name_for_calc}. Raw expiry: {expiry_date}")
+            logger.info(
+                f"VIP duration from Telegram Stars payload '{payment_detail}' determined as {plan_name_for_calc}. Raw expiry: {expiry_date}"
+            )
         else:
-            logger.error(f"Unknown payment source type: {source_type}. Cannot grant VIP.")
+            logger.error(
+                f"Unknown payment source type: {source_type}. Cannot grant VIP."
+            )
             return False
 
         if not expiry_date:
-            logger.error(f"Could not determine expiry date for user {user_id}. Source: {source_type}, Detail: {payment_detail}")
+            logger.error(
+                f"Could not determine expiry date for user {user_id}. Source: {source_type}, Detail: {payment_detail}"
+            )
             return False
 
         # --- DATABASE INTERACTION START ---
         # 1. Get DB connection/session
         conn = await create_database_connection()
         if not conn:
-            logger.error("Failed to acquire DB connection in grant_vip_access.")
+            logger.error(
+                "Failed to acquire DB connection in grant_vip_access.")
             return False
 
         # 2. Fetch current user VIP status to determine if we need to extend or set new
-        user_record = await conn.fetchrow("SELECT vip_expires_at FROM users WHERE user_id = $1", user_id)
-        current_vip_expiry = user_record['vip_expires_at'] if user_record and 'vip_expires_at' in user_record else None
+        user_record = await conn.fetchrow(
+            "SELECT vip_expires_at FROM users WHERE user_id = $1", user_id)
+        current_vip_expiry = user_record[
+            'vip_expires_at'] if user_record and 'vip_expires_at' in user_record else None
 
-        final_expiry_date = expiry_date # Default to the newly calculated expiry
+        final_expiry_date = expiry_date  # Default to the newly calculated expiry
 
-        if current_vip_expiry and current_vip_expiry > datetime.datetime.now(datetime.timezone.utc):
+        if current_vip_expiry and current_vip_expiry > datetime.now(
+                timezone.utc):
             # If current VIP is still active, extend from the current expiry date
             # Calculate the duration of the new purchase
-            duration_of_new_purchase = expiry_date - datetime.datetime.now(datetime.timezone.utc)
+            duration_of_new_purchase = expiry_date - datetime.now(timezone.utc)
             final_expiry_date = current_vip_expiry + duration_of_new_purchase
-            logger.info(f"Extending VIP for user {user_id}. Old expiry: {current_vip_expiry}, Adding: {duration_of_new_purchase}, New final expiry: {final_expiry_date}")
+            logger.info(
+                f"Extending VIP for user {user_id}. Old expiry: {current_vip_expiry}, Adding: {duration_of_new_purchase}, New final expiry: {final_expiry_date}"
+            )
         else:
             # If current VIP is expired or non-existent, set new expiry from now
             final_expiry_date = expiry_date
-            logger.info(f"Setting new VIP for user {user_id}. New final expiry: {final_expiry_date}")
+            logger.info(
+                f"Setting new VIP for user {user_id}. New final expiry: {final_expiry_date}"
+            )
 
         # 3. Update the user's record in your 'users' table
         await conn.execute(
@@ -2326,20 +2377,25 @@ async def grant_vip_access(user_id: int, source_type: str, payment_detail: str) 
                 notified_before_expiry = FALSE
             WHERE user_id = $3
             """,
-            plan_name_for_calc, # This variable now consistently holds the plan string like "1 Week VIP"
+            plan_name_for_calc,  # This variable now consistently holds the plan string like "1 Week VIP"
             final_expiry_date,
-            user_id
-        )
+            user_id)
 
-        logger.info(f"Database: User {user_id} VIP status updated. New expiry: {final_expiry_date}")
-        return True # Return True if DB update was successful
+        logger.info(
+            f"Database: User {user_id} VIP status updated. New expiry: {final_expiry_date}"
+        )
+        return True  # Return True if DB update was successful
 
     except Exception as e:
-        logger.error(f"Error granting VIP access to user {user_id} (Source: {source_type}, Detail: {payment_detail}): {e}", exc_info=True)
+        logger.error(
+            f"Error granting VIP access to user {user_id} (Source: {source_type}, Detail: {payment_detail}): {e}",
+            exc_info=True)
         return False
     finally:
         if conn:
-            await conn.close() # Ensure connection is closed
+            await conn.close()  # Ensure connection is closed
+
+
 async def check_and_deactivate_expired_vip(bot: Bot):
     """
     Checks for expired VIP subscriptions in the database and deactivates them.
@@ -2349,15 +2405,17 @@ async def check_and_deactivate_expired_vip(bot: Bot):
     try:
         conn = await create_database_connection()
         if not conn:
-            logger.error("Failed to acquire DB connection in check_and_deactivate_expired_vip.")
+            logger.error(
+                "Failed to acquire DB connection in check_and_deactivate_expired_vip."
+            )
             return
 
-        now_utc = datetime.datetime.now(datetime.timezone.utc)
+        now_utc = datetime.now(timezone.utc)
         logger.info(f"Running VIP expiry check at {now_utc}.")
 
         # --- Phase 1: Notify users before expiry (e.g., 24 hours before) ---
         # Select users who are VIP, not yet notified, and expiring within 24 hours
-        expiring_soon_threshold = now_utc + datetime.timedelta(hours=24)
+        expiring_soon_threshold = now_utc + timedelta(hours=24)
 
         users_to_notify = await conn.fetch(
             """
@@ -2369,7 +2427,7 @@ async def check_and_deactivate_expired_vip(bot: Bot):
               AND vip_expires_at > $2
             """,
             expiring_soon_threshold,
-            now_utc # Ensure it's in the future from now, but within 24 hours
+            now_utc  # Ensure it's in the future from now, but within 24 hours
         )
 
         for user_data in users_to_notify:
@@ -2380,18 +2438,21 @@ async def check_and_deactivate_expired_vip(bot: Bot):
             try:
                 await bot.send_message(
                     chat_id=user_id,
-                    text=f"⏰ Your VIP subscription will expire in less than {int(time_until_expiry.total_seconds() / 3600)} hours ({expires_at.strftime('%Y-%m-%d %H:%M UTC')})!\n\n"
-                         "Don't lose access to exclusive features like city-based matching. Renew your VIP status now: /VIP",
-                    parse_mode=ParseMode.HTML
-                )
+                    text=
+                    f"⏰ Your VIP subscription will expire in less than {int(time_until_expiry.total_seconds() / 3600)} hours ({expires_at.strftime('%Y-%m-%d %H:%M UTC')})!\n\n"
+                    "Don't lose access to exclusive features like city-based matching. Renew your VIP status now: /vip",
+                    parse_mode=ParseMode.HTML)
                 await conn.execute(
-                    "UPDATE users SET notified_before_expiry = TRUE WHERE user_id = $1", user_id
+                    "UPDATE users SET notified_before_expiry = TRUE WHERE user_id = $1",
+                    user_id)
+                logger.info(
+                    f"Sent VIP expiry notification to user {user_id}. Expires at {expires_at}."
                 )
-                logger.info(f"Sent VIP expiry notification to user {user_id}. Expires at {expires_at}.")
             except Exception as e:
-                logger.warning(f"Could not send VIP expiry notification to user {user_id}: {e}")
+                logger.warning(
+                    f"Could not send VIP expiry notification to user {user_id}: {e}"
+                )
                 # Don't mark as notified if message failed, so it can be retried
-
 
         # --- Phase 2: Deactivate expired VIPs ---
         # Select users who are VIP, and their expiry date is in the past
@@ -2400,14 +2461,14 @@ async def check_and_deactivate_expired_vip(bot: Bot):
             SELECT user_id, vip_plan
             FROM users
             WHERE is_vip = TRUE AND vip_expires_at <= $1
-            """,
-            now_utc
-        )
+            """, now_utc)
 
         for user_data in expired_users:
             user_id = user_data['user_id']
             vip_plan = user_data['vip_plan']
-            logger.info(f"Deactivating VIP for user {user_id}. Plan: {vip_plan}. Expiry was in the past.")
+            logger.info(
+                f"Deactivating VIP for user {user_id}. Plan: {vip_plan}. Expiry was in the past."
+            )
 
             # Update user's VIP status
             await conn.execute(
@@ -2418,32 +2479,32 @@ async def check_and_deactivate_expired_vip(bot: Bot):
                     vip_plan = NULL,
                     notified_before_expiry = FALSE
                 WHERE user_id = $1
-                """,
-                user_id
-            )
+                """, user_id)
 
             # Optionally notify the user they've lost VIP access
             try:
                 await bot.send_message(
                     chat_id=user_id,
-                    text="😔 Your VIP subscription has expired. You no longer have access to exclusive features.\n\n"
-                         "Renew your VIP access anytime to unlock all premium benefits: /VIP",
-                    parse_mode=ParseMode.HTML
-                )
+                    text=
+                    "😔 Your VIP subscription has expired. You no longer have access to exclusive features.\n\n"
+                    "Renew your VIP access anytime to unlock all premium benefits: /vip",
+                    parse_mode=ParseMode.HTML)
                 logger.info(f"Sent VIP expired message to user {user_id}.")
             except Exception as e:
-                logger.warning(f"Could not send VIP expired message to user {user_id}: {e}")
+                logger.warning(
+                    f"Could not send VIP expired message to user {user_id}: {e}"
+                )
 
     except Exception as e:
-        logger.error(f"Error in check_and_deactivate_expired_vip task: {e}", exc_info=True)
+        logger.error(f"Error in check_and_deactivate_expired_vip task: {e}",
+                     exc_info=True)
     finally:
         if conn:
             await conn.close()
 
+
 # handlers.py (Add this new function)
 # In webhook/handlers.py (at the very top, with other imports)
-from aiogram.enums import ParseMode
-from aiohttp import web, ClientSession, ClientError
 
 
 # --- Chapa Webhook Handler ---

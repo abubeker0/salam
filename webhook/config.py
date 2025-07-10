@@ -8,8 +8,8 @@ ADMIN_USER_ID = 5935463391
 #Replace with your admin ID
 
 #Construct the database URL.
-#DATABASE_URL = "postgresql://postgres:OSectOkNhhlmYVnOrUsJYqDJzXdGeIjm@caboose.proxy.rlwy.net:59203/railway"
-DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+DATABASE_URL = "postgresql://postgres:glmFUySZSFZdBFHXPlZoIGXzfiiFeQXU@metro.proxy.rlwy.net:39775/railway"
+#DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
 #TELEGRAM_PAYMENT_TOKEN = "your_telegram_payment_token"
 #CHAPA_SECRET_KEY = "CHASECK_TEST-1dOO7koopLCEZCvjR9vqy4fHtf2cLSwF"
