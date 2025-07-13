@@ -1,0 +1,662 @@
+# Translations template for PROJECT.
+# Copyright (C) 2025 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2025-07-13 09:13+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: webhook/handlers.py:93 webhook/handlers.py:189 webhook/handlers.py:893
+msgid "📍 Share Location"
+msgstr ""
+
+#: webhook/handlers.py:122
+msgid "⚠️ Could not detect your city. Please try again later."
+msgstr ""
+
+#: webhook/handlers.py:142
+msgid ""
+"❌ An internal database error occurred while saving your location. Please "
+"try again."
+msgstr ""
+
+#: webhook/handlers.py:164 webhook/handlers.py:471
+msgid "♂️ Male"
+msgstr ""
+
+#: webhook/handlers.py:170 webhook/handlers.py:474
+msgid "♀️ Female"
+msgstr ""
+
+#: webhook/handlers.py:176 webhook/handlers.py:477
+msgid "Any"
+msgstr ""
+
+#: webhook/handlers.py:245
+msgid ""
+"⚠️ Your profile is incomplete. Please finish the setup.\n"
+"\n"
+"Select your gender:"
+msgstr ""
+
+#: webhook/handlers.py:254 webhook/handlers.py:430
+msgid ""
+"📍 Would you like to share your location for better matches?\n"
+"\n"
+"This is optional, but helps us find people near you. If not, use /search "
+"command to find a match."
+msgstr ""
+
+#: webhook/handlers.py:262
+msgid "🎉 Welcome back! You're all set."
+msgstr ""
+
+#: webhook/handlers.py:276 webhook/handlers.py:330 webhook/handlers.py:928
+#: webhook/handlers.py:1428 webhook/handlers.py:1574 webhook/handlers.py:1722
+#: webhook/handlers.py:2420 webhook/handlers.py:2461
+msgid "❌ An unexpected error occurred. Please try again later."
+msgstr ""
+
+#: webhook/handlers.py:295
+msgid "❌ An internal error occurred. Please try again."
+msgstr ""
+
+#: webhook/handlers.py:296
+msgid "❌ An internal error occurred. Please try again later."
+msgstr ""
+
+#: webhook/handlers.py:307
+msgid "Language set successfully!"
+msgstr ""
+
+#: webhook/handlers.py:311
+#, python-brace-format
+msgid "Language set to **{lang}**."
+msgstr ""
+
+#: webhook/handlers.py:317
+msgid ""
+"👋 Welcome to the Anonymous Chat Bot! Let's get you set up.\n"
+"\n"
+"By using this bot, you confirm you're 18+ and agree to our Terms and "
+"Conditions (/privacy).\n"
+"\n"
+"Please select your gender:"
+msgstr ""
+
+#: webhook/handlers.py:329
+msgid "❌ An unexpected error occurred. Please try again."
+msgstr ""
+
+#: webhook/handlers.py:396 webhook/handlers.py:1458
+msgid "✅ Gender updated!"
+msgstr ""
+
+#: webhook/handlers.py:398 webhook/handlers.py:1464 webhook/handlers.py:1769
+msgid "🔢 Please enter your age:"
+msgstr ""
+
+#: webhook/handlers.py:408 webhook/handlers.py:1472
+msgid ""
+"❌ An unexpected error occurred while saving your gender. Please try again"
+" later."
+msgstr ""
+
+#: webhook/handlers.py:428
+msgid "✅ Your profile is complete!"
+msgstr ""
+
+#: webhook/handlers.py:441
+msgid ""
+"❌ An unexpected error occurred while saving your age. Please try again "
+"later."
+msgstr ""
+
+#: webhook/handlers.py:453
+msgid "🔄 Select your new gender:"
+msgstr ""
+
+#: webhook/handlers.py:653
+msgid "Choose the gender you want to chat with:"
+msgstr ""
+
+#: webhook/handlers.py:669
+msgid ""
+"⏳ You are already in the search queue. Please wait for your current "
+"search to complete, or you can /stop."
+msgstr ""
+
+#: webhook/handlers.py:692
+msgid "Your partner has disconnected. Use /search to find a partner."
+msgstr ""
+
+#: webhook/handlers.py:696
+msgid "You were in a chat. Disconnected."
+msgstr ""
+
+#: webhook/handlers.py:708
+msgid "⚠️ Could not retrieve your user info. Please try again."
+msgstr ""
+
+#: webhook/handlers.py:718
+msgid "⚠️ Please set your gender first using /setgender."
+msgstr ""
+
+#: webhook/handlers.py:726
+msgid ""
+"💎 Gender-based matching is a VIP-only feature.\n"
+"Become a /vip member"
+msgstr ""
+
+#: webhook/handlers.py:738 webhook/handlers.py:968
+msgid "🔍 Searching for a partner..."
+msgstr ""
+
+#: webhook/handlers.py:781
+msgid ""
+"💎 You found another VIP partner! Start chatting!\n"
+"\n"
+"/next — find a new partner\n"
+"/stop — stop this chat"
+msgstr ""
+
+#: webhook/handlers.py:786 webhook/handlers.py:1402 webhook/handlers.py:1408
+msgid ""
+"✅ Partner found! Start chatting!\n"
+"\n"
+"/next — find a new partner\n"
+"/stop — stop this chat"
+msgstr ""
+
+#: webhook/handlers.py:793 webhook/handlers.py:1398
+msgid ""
+"💎 VIP partner found! Start chatting!\n"
+"\n"
+"/next — find a new partner\n"
+"/stop — stop this chat"
+msgstr ""
+
+#: webhook/handlers.py:802 webhook/handlers.py:1036
+msgid "😔 No partners found at the moment. Please try again later."
+msgstr ""
+
+#: webhook/handlers.py:812
+msgid "❌ An unexpected error occurred during search. Please try again later."
+msgstr ""
+
+#: webhook/handlers.py:901
+msgid "Please share your live location:"
+msgstr ""
+
+#: webhook/handlers.py:949
+msgid ""
+"⏳ You are already in the search queue. Please wait for your current "
+"search to complete, or you can /stop"
+msgstr ""
+
+#: webhook/handlers.py:957
+msgid ""
+"🤔 You are already in a dialog right now.\n"
+"/next — find a new partner\n"
+"/stop — stop this dialog"
+msgstr ""
+
+#: webhook/handlers.py:1015
+msgid ""
+"💎 You found another VIP partner! Start chatting!\n"
+"\n"
+"/next — new partner\n"
+"/stop — end chat"
+msgstr ""
+
+#: webhook/handlers.py:1020
+msgid ""
+"✅ Partner found! Start chatting!\n"
+"\n"
+"/next — new partner\n"
+"/stop — end chat"
+msgstr ""
+
+#: webhook/handlers.py:1027
+msgid ""
+"💎 VIP partner found! Start chatting!\n"
+"\n"
+"/next — new partner\n"
+"/stop — end chat"
+msgstr ""
+
+#: webhook/handlers.py:1048
+msgid "You are not in an active chat. /search to find a partner."
+msgstr ""
+
+#: webhook/handlers.py:1082
+msgid "✅ Your partner has stopped the chat. /search to find a new partner"
+msgstr ""
+
+#: webhook/handlers.py:1090
+msgid "✅ Chat stopped. /search to find a new partner"
+msgstr ""
+
+#: webhook/handlers.py:1099 webhook/handlers.py:1103 webhook/handlers.py:1540
+#: webhook/handlers.py:1547
+msgid "How was your experience with your last partner?"
+msgstr ""
+
+#: webhook/handlers.py:1114
+msgid "There was an issue stopping the chat."
+msgstr ""
+
+#: webhook/handlers.py:1125
+msgid "🔄 Change Gender"
+msgstr ""
+
+#: webhook/handlers.py:1129
+msgid "📍 Set Location"
+msgstr ""
+
+#: webhook/handlers.py:1133
+msgid "🎂 Set Age"
+msgstr ""
+
+#: webhook/handlers.py:1138
+msgid "⚙️ Choose what you want to update:"
+msgstr ""
+
+#: webhook/handlers.py:1234
+#, python-brace-format
+msgid ""
+"💰 You earned 10 credits!\n"
+"Your total credits: {new_credits}"
+msgstr ""
+
+#: webhook/handlers.py:1246
+msgid "❌ An error occurred while adding credits. Please try again later."
+msgstr ""
+
+#: webhook/handlers.py:1267
+msgid ""
+"Please wait for your previous search request to finish, or /stop to "
+"cancel."
+msgstr ""
+
+#: webhook/handlers.py:1293
+msgid ""
+"You have reached your daily search limit or have no credits. Use /credit "
+"to get more searches."
+msgstr ""
+
+#: webhook/handlers.py:1321
+msgid "Your partner has disconnected to /search for someone new."
+msgstr ""
+
+#: webhook/handlers.py:1327
+msgid ""
+"You have been disconnected from your previous chat. Searching for a new "
+"partner."
+msgstr ""
+
+#: webhook/handlers.py:1346
+msgid "🔍Searching for a partner..."
+msgstr ""
+
+#: webhook/handlers.py:1417
+msgid "😔 No users are currently available for chat. Removed from search queue."
+msgstr ""
+
+#: webhook/handlers.py:1502
+#, python-brace-format
+msgid "🚫 You are banned until {banned_time}."
+msgstr ""
+
+#: webhook/handlers.py:1536
+msgid "Your partner ended the chat. /search to find a new partner"
+msgstr ""
+
+#: webhook/handlers.py:1551
+msgid "You're not currently in a chat."
+msgstr ""
+
+#: webhook/handlers.py:1689
+msgid ""
+"🎉 You already have 💎 **VIP access**!\n"
+"Enjoy all premium features."
+msgstr ""
+
+#: webhook/handlers.py:1702
+msgid ""
+"<b>💎 Become a VIP User</b>\n"
+"Support the chat and unlock premium features instantly.\n"
+"\n"
+"<b>Choose your preferred payment method:</b>"
+msgstr ""
+
+#: webhook/handlers.py:1708
+msgid "🧾 Telegram Payments"
+msgstr ""
+
+#: webhook/handlers.py:1712
+msgid "💳 Chapa Payments"
+msgstr ""
+
+#: webhook/handlers.py:1734
+#, python-brace-format
+msgid "Your User ID is: `{user_id}`"
+msgstr ""
+
+#: webhook/handlers.py:1788
+#, python-brace-format
+msgid "✅ Your age has been set to: **{age}**"
+msgstr ""
+
+#: webhook/handlers.py:1797
+msgid "❌ An error occurred while saving your age. Please try again later."
+msgstr ""
+
+#: webhook/handlers.py:1805
+msgid "❌ Please enter a valid age between 10 and 100."
+msgstr ""
+
+#: webhook/handlers.py:1810
+msgid "❌ Please enter a valid numeric age."
+msgstr ""
+
+#: webhook/handlers.py:1831
+msgid "An internal error occurred. Please try again later."
+msgstr ""
+
+#: webhook/handlers.py:1846
+msgid ""
+"💎 City-based matching is a **VIP-only feature**.\n"
+"Become a /vip member to unlock it!"
+msgstr ""
+
+#: webhook/handlers.py:1855
+msgid "📍 Please share your location first using the /setlocation command."
+msgstr ""
+
+#: webhook/handlers.py:1862
+msgid "⚠️ You're already in a chat. Use /stop to end it first before searching."
+msgstr ""
+
+#: webhook/handlers.py:1870
+msgid "⏳ You're already searching. Please wait or use /stop to cancel."
+msgstr ""
+
+#: webhook/handlers.py:1883
+msgid "🔍 Searching for a partner in your city..."
+msgstr ""
+
+#: webhook/handlers.py:1935 webhook/handlers.py:1942
+msgid ""
+"💎 **VIP City Match Found!** You're now chatting with another **VIP** "
+"member in your city.\n"
+"\n"
+"/next — find a new partner\n"
+"/stop — end chat"
+msgstr ""
+
+#: webhook/handlers.py:1937 webhook/handlers.py:1944
+msgid ""
+"🏙️ **City Match Found!** You're now chatting with someone in your city.\n"
+"\n"
+"/next — find a new partner\n"
+"/stop — end chat"
+msgstr ""
+
+#: webhook/handlers.py:1956
+msgid ""
+"😔 No active users are available in your city right now. You'll stay in "
+"the search queue and be matched as soon as someone nearby becomes "
+"available."
+msgstr ""
+
+#: webhook/handlers.py:1966
+msgid ""
+"❌ An unexpected error occurred while searching for a city partner. Please"
+" try again later."
+msgstr ""
+
+#: webhook/handlers.py:1978
+msgid ""
+"🤖 You're not in a chat right now.\n"
+"\n"
+"Tap /Search to start chatting."
+msgstr ""
+
+#: webhook/handlers.py:2225
+msgid "👍 Good"
+msgstr ""
+
+#: webhook/handlers.py:2231
+msgid "👎 Bad"
+msgstr ""
+
+#: webhook/handlers.py:2237
+msgid "⚠️ Report"
+msgstr ""
+
+#: webhook/handlers.py:2247 webhook/handlers.py:2267
+msgid "Your feedback has been submitted successfully."
+msgstr ""
+
+#: webhook/handlers.py:2285
+msgid "📢 Advertising"
+msgstr ""
+
+#: webhook/handlers.py:2291
+msgid "💰 Selling"
+msgstr ""
+
+#: webhook/handlers.py:2297
+msgid "🔞 Child Pornography"
+msgstr ""
+
+#: webhook/handlers.py:2303
+msgid "🤲 Begging"
+msgstr ""
+
+#: webhook/handlers.py:2309
+msgid "😡 Insult"
+msgstr ""
+
+#: webhook/handlers.py:2315
+msgid "🪓 Violence"
+msgstr ""
+
+#: webhook/handlers.py:2321
+msgid "🌍 Racism"
+msgstr ""
+
+#: webhook/handlers.py:2327
+msgid "🤬 Vulgar Partner"
+msgstr ""
+
+#: webhook/handlers.py:2333
+msgid "🔙 Back"
+msgstr ""
+
+#: webhook/handlers.py:2344
+msgid "⚠️ Please select a reason to report your partner:"
+msgstr ""
+
+#: webhook/handlers.py:2375
+msgid "✅ Your report has been submitted. Thank you!"
+msgstr ""
+
+#: webhook/handlers.py:2390
+msgid "100 ⭐ / $1.99 a week"
+msgstr ""
+
+#: webhook/handlers.py:2394
+msgid "250 ⭐ / $3.99 a month"
+msgstr ""
+
+#: webhook/handlers.py:2398
+msgid "1000 ⭐ / $19.99 a year"
+msgstr ""
+
+#: webhook/handlers.py:2413
+msgid "💫 Choose your plan with Telegram Stars:"
+msgstr ""
+
+#: webhook/handlers.py:2431
+msgid "1 Month - 400 ETB"
+msgstr ""
+
+#: webhook/handlers.py:2435
+msgid "6 Months - 1500 ETB"
+msgstr ""
+
+#: webhook/handlers.py:2439
+msgid "1 Year - 2500 ETB"
+msgstr ""
+
+#: webhook/handlers.py:2454
+msgid "Choose your Chapa plan:"
+msgstr ""
+
+#: webhook/handlers.py:2489
+msgid "Invalid plan selected."
+msgstr ""
+
+#: webhook/handlers.py:2497
+msgid "Preparing Chapa payment..."
+msgstr ""
+
+#: webhook/handlers.py:2514
+msgid "VIP Subscription"
+msgstr ""
+
+#: webhook/handlers.py:2515
+msgid "Unlock VIP features in the bot"
+msgstr ""
+
+#: webhook/handlers.py:2528
+msgid "❌ Chapa's response was unreadable. Please try again later."
+msgstr ""
+
+#: webhook/handlers.py:2559
+msgid "⚠ Payment prepared, but failed to save record. Please contact support."
+msgstr ""
+
+#: webhook/handlers.py:2568
+msgid "✅ Pay with Chapa"
+msgstr ""
+
+#: webhook/handlers.py:2570
+msgid "💳 Click below to complete your payment securely:"
+msgstr ""
+
+#: webhook/handlers.py:2579
+msgid "❌ Failed to create payment. Please try again later."
+msgstr ""
+
+#: webhook/handlers.py:2585
+msgid ""
+"❌ Network error during payment initiation. Please check your connection "
+"and try again."
+msgstr ""
+
+#: webhook/handlers.py:2590
+msgid ""
+"❌ An unexpected error occurred while processing your payment. Please try "
+"again later."
+msgstr ""
+
+#: webhook/handlers.py:2797
+#, python-brace-format
+msgid ""
+"⏰ Your VIP subscription will expire in less than {hours} hours "
+"({expiry_date})!\n"
+"\n"
+"Don't lose access to exclusive features like city-based matching. Renew "
+"your VIP status now: /vip"
+msgstr ""
+
+#: webhook/handlers.py:2855
+msgid ""
+"😔 Your VIP subscription has expired. You no longer have access to "
+"exclusive features.\n"
+"\n"
+"Renew your VIP access anytime to unlock all premium benefits: /vip"
+msgstr ""
+
+#: webhook/handlers.py:2980
+#, python-brace-format
+msgid ""
+"🎉 Congratulations! Your 💎{plan_name}💎 VIP subscription has been "
+"activated! It will expire on **{expiry_date_display}**."
+msgstr ""
+
+#: webhook/handlers.py:3005
+msgid ""
+"❌ We received your payment, but there was an issue activating your VIP "
+"status. Please contact support immediately."
+msgstr ""
+
+#: webhook/handlers.py:3035
+#, python-brace-format
+msgid ""
+"😔 Your Chapa payment for {plan_name} failed. Please try again or contact "
+"support if you believe this is an error."
+msgstr ""
+
+#: webhook/handlers.py:3127
+msgid "Preparing your invoice..."
+msgstr ""
+
+#: webhook/handlers.py:3140
+msgid "An error occurred: Invalid plan selected. Please try again."
+msgstr ""
+
+#: webhook/handlers.py:3146 webhook/handlers.py:3267
+msgid "title_key"
+msgstr ""
+
+#: webhook/handlers.py:3147
+msgid "description_key"
+msgstr ""
+
+#: webhook/handlers.py:3167
+#, python-brace-format
+msgid "💫 Your invoice for **{title}** is ready!"
+msgstr ""
+
+#: webhook/handlers.py:3196
+msgid ""
+"Sorry, something went wrong while creating your invoice. Please try again"
+" later."
+msgstr ""
+
+#: webhook/handlers.py:3262
+msgid "VIP"
+msgstr ""
+
+#: webhook/handlers.py:3280
+#, python-brace-format
+msgid ""
+"🎉 Congratulations! Your 💎**{plan_name_display}**💎 VIP subscription has "
+"been activated! It will expire on **{expiry_date_for_display}**."
+msgstr ""
+
+#: webhook/handlers.py:3295
+msgid ""
+"Thank you for your payment, but there was an issue granting your VIP "
+"access. Please contact support."
+msgstr ""
+
+#: webhook/handlers.py:3307
+msgid "An unexpected error occurred. Please try again later or contact support."
+msgstr ""
+
