@@ -7,611 +7,734 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-07-13 09:13+0300\n"
-"PO-Revision-Date: 2025-07-13 09:15+0300\n"
+"POT-Creation-Date: 2025-07-17 12:54+0300\n"
+"PO-Revision-Date: 2025-07-17 12:55+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: am\n"
 "Language-Team: am <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : "
+"n%100>=3 && n%100<=10 ? 3 : n%100>=0 && n%100<=2 ? 4 : 5);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: webhook/handlers.py:93 webhook/handlers.py:189 webhook/handlers.py:893
+#: webhook/handlers.py:98 webhook/handlers.py:304 webhook/handlers.py:1065
 msgid "📍 Share Location"
-msgstr "📍 ቦታ አጋራ"
+msgstr "📍 አካባቢን ያጋሩ"
 
-#: webhook/handlers.py:122
-msgid "⚠️ Could not detect your city. Please try again later."
-msgstr "⚠️ ከተማዎትን  ማወቅ አልተቻለም። እባክዎ ቆይተው እንደገና ይሞክሩ።"
-
-#: webhook/handlers.py:142
-msgid ""
-"❌ An internal database error occurred while saving your location. Please "
-"try again."
-msgstr "❌ አካባቢዎን በማስቀመጥ ላይ ሳለ የውስጥ ዳታቤዝ ስህተት ተከስቷል። እባክዎ እንደገና ይሞክሩ ።"
-
-#: webhook/handlers.py:164 webhook/handlers.py:471
-msgid "♂️ Male"
-msgstr "♂️ ወንድ"
-
-#: webhook/handlers.py:170 webhook/handlers.py:474
-msgid "♀️ Female"
-msgstr "♀️ ሴት"
-
-#: webhook/handlers.py:176 webhook/handlers.py:477
-msgid "Any"
-msgstr "ማንኛውም"
-
-#: webhook/handlers.py:245
+#: webhook/handlers.py:165
 msgid ""
 "⚠️ Your profile is incomplete. Please finish the setup.\n"
 "\n"
 "Select your gender:"
-msgstr """⚠️ መገለጫዎ አልተጠናቀቀም። እባክዎ ማዋቀሩን ይቸርሱ።\n""\n"
-            "ጾታዎን ምረጡ፡-"
+msgstr ""
+"⚠️ የእርስዎ መገለጫ አልተጠናቀቀም። እባክዎ ማዋቀሩን ይጨርሱ።\n"
+"\n"
+"ጾታዎን ይምረጡ:"
 
-#: webhook/handlers.py:254 webhook/handlers.py:430
+#: webhook/handlers.py:181 webhook/handlers.py:599
 msgid ""
 "📍 Would you like to share your location for better matches?\n"
 "\n"
 "This is optional, but helps us find people near you. If not, use /search "
 "command to find a match."
-msgstr """📍 ለተሻለ ግጥሚያዎች አካባቢዎን ማጋራት ይፈልጋሉ?\n\n"
-            "ይህ አማራጭ ነው፣ ነገር ግን በአካባቢዎ ያሉ ሰዎችን እንድናገኝ ይረዳናል።ተዛማጆችን ለማግኘት /search ትዕዛዝን ይጠቀሙ "
+msgstr ""
+"📍 ለተሻለ ተዛማጅነት አካባቢዎን ማጋራት ይፈልጋሉ?\n"
+"\n"
+"ይህ አማራጭ ነው፣ ነገር ግን በአቅራቢያዎ ያሉ ሰዎችን እንድናገኝ ይረዳናል። ካልሆነ፣ ተዛማጅ ለማግኘት /search ትዕዛዙን ይጠቀሙ።"
 
-#: webhook/handlers.py:262
+#: webhook/handlers.py:195
 msgid "🎉 Welcome back! You're all set."
-msgstr "🎉 እንኳን ደህና መጡ! ጨርሰዋል።"
+msgstr "🎉 እንኳን ደህና መጡ! ሁሉም ተዘጋጅቷል።"
 
-#: webhook/handlers.py:276 webhook/handlers.py:330 webhook/handlers.py:928
-#: webhook/handlers.py:1428 webhook/handlers.py:1574 webhook/handlers.py:1722
-#: webhook/handlers.py:2420 webhook/handlers.py:2461
+#: webhook/handlers.py:207 webhook/handlers.py:430 webhook/handlers.py:1097
+#: webhook/handlers.py:1216 webhook/handlers.py:1325 webhook/handlers.py:1672
+#: webhook/handlers.py:1850 webhook/handlers.py:2033 webhook/handlers.py:2104
+#: webhook/handlers.py:2350 webhook/handlers.py:2813 webhook/handlers.py:2931
+#: webhook/handlers.py:2986
 msgid "❌ An unexpected error occurred. Please try again later."
 msgstr "❌ ያልተጠበቀ ስህተት ተፈጥሯል። እባክዎ ቆይተው እንደገና ይሞክሩ።"
 
-#: webhook/handlers.py:295
-msgid "❌ An internal error occurred. Please try again."
-msgstr "❌ የውስጥ ስህተት ተፈጥሯል። እባክህ እንደገና ሞክር።"
+#: webhook/handlers.py:224 webhook/handlers.py:332
+msgid "⚠️ Could not detect your city. Please try again later."
+msgstr "⚠️ ከተማዎን ማግኘት አልተቻለም። እባክዎ ቆይተው እንደገና ይሞክሩ።"
 
-#: webhook/handlers.py:296
-msgid "❌ An internal error occurred. Please try again later."
-msgstr "❌ የውስጥ ስህተት ተፈጥሯል። እባክዎ ቆይተው እንደገና ይሞክሩ።"
+#: webhook/handlers.py:252 webhook/handlers.py:362
+msgid ""
+"❌ An internal database error occurred while saving your location. Please "
+"try again."
+msgstr ""
+"❌ አካባቢዎን ሲያስቀምጡ የውስጥ የመረጃ ቋት ስህተት ተፈጥሯል። እባክዎ እንደገና ይሞክሩ።"
 
-#: webhook/handlers.py:307
+#: webhook/handlers.py:258 webhook/handlers.py:367
+#, python-brace-format
+msgid "✅ Location set to: {city}"
+msgstr "✅ አካባቢ ወደ: {city} ተቀናብሯል።"
+
+#: webhook/handlers.py:280
+msgid "👱‍♂️ Male"
+msgstr "👱‍♂️ ወንድ"
+
+#: webhook/handlers.py:286
+msgid "👩‍🦰 Female"
+msgstr "👩‍🦰 ሴት"
+
+#: webhook/handlers.py:292
+msgid "Any"
+msgstr "ማንኛውም"
+
+#: webhook/handlers.py:392
 msgid "Language set successfully!"
 msgstr "ቋንቋ በተሳካ ሁኔታ ተቀናብሯል!"
 
-#: webhook/handlers.py:311
+#: webhook/handlers.py:395
 #, python-brace-format
-msgid "Language set to **{lang}**."
-msgstr "ቋንቋ ወደ **{lang}** ተቀናብሯል።"
+msgid "Language set to <b>{lang}</b>."
+msgstr "ቋንቋ ወደ <b>{lang}</b> ተቀናብሯል።"
 
-#: webhook/handlers.py:317
+#: webhook/handlers.py:406
 msgid ""
-"👋 Welcome to the Anonymous Chat Bot! Let's get you set up.\n"
+"👋 Welcome to the Selam Chat Bot! Let's get you set up.\n"
 "\n"
 "By using this bot, you confirm you're 18+ and agree to our Terms and "
 "Conditions (/privacy).\n"
 "\n"
 "Please select your gender:"
-msgstr """👋 እንኳን ወደ ስም-አልባ Chat Bot በደህና መጡ! እናዘጋጅህ።\n"
+msgstr ""
+"👋 ወደ ሰላም ቻት ቦት እንኳን ደህና መጡ! እናዋቅርዎት።\n"
 "\n"
-"ይህን ቦት በመጠቀም 18+ እንደሆናችሁ አረጋግጠዋል እና በውላችን እና"
-"ሁኔታዎች (/privacy)\n"
+"ይህን ቦት በመጠቀም፣ 18+ እንደሆናችሁ እና የአገልግሎት ውላችንን (/privacy) እንደተስማማችሁ አረጋግጣችኋል።\n"
 "\n"
 "እባክዎ ጾታዎን ይምረጡ:"
 
-#: webhook/handlers.py:329
+#: webhook/handlers.py:419
+msgid ""
+"✅ Language updated successfully. You will only be matched with users who "
+"speak your language if possible."
+msgstr ""
+"✅ ቋንቋ በተሳካ ሁኔታ ተዘምኗል። ከተቻለ ቋንቋዎን ከሚናገሩ ተጠቃሚዎች ጋር ብቻ ነው የሚገናኙት።"
+
+#: webhook/handlers.py:427
 msgid "❌ An unexpected error occurred. Please try again."
 msgstr "❌ ያልተጠበቀ ስህተት ተፈጥሯል። እባክዎ እንደገና ይሞክሩ።"
 
-#: webhook/handlers.py:396 webhook/handlers.py:1458
+#: webhook/handlers.py:502
+msgid "Please choose your preferred language:"
+msgstr "እባክዎ የሚመርጡትን ቋንቋ ይምረጡ:"
+
+#: webhook/handlers.py:512
+msgid "❌ An error occurred."
+msgstr "❌ ስህተት ተፈጥሯል።"
+
+#: webhook/handlers.py:515
+msgid "❌ Please try again later."
+msgstr "❌ እባክዎ ቆይተው እንደገና ይሞክሩ።"
+
+#: webhook/handlers.py:555 webhook/handlers.py:1715
 msgid "✅ Gender updated!"
-msgstr "✅ ጾታ ዘምኗል!"
+msgstr "✅ ጾታ ተዘምኗል!"
 
-#: webhook/handlers.py:398 webhook/handlers.py:1464 webhook/handlers.py:1769
+#: webhook/handlers.py:560 webhook/handlers.py:1723 webhook/handlers.py:2094
 msgid "🔢 Please enter your age:"
-msgstr "🔢 እባክዎን እድሜዎን ያስገቡ፡"
+msgstr "🔢 እባክዎ ዕድሜዎን ያስገቡ:"
 
-#: webhook/handlers.py:408 webhook/handlers.py:1472
+#: webhook/handlers.py:569 webhook/handlers.py:1731
 msgid ""
 "❌ An unexpected error occurred while saving your gender. Please try again"
 " later."
-msgstr """ ❌ ጾታህን በማስቀመጥ ላይ ሳለ ያልተጠበቀ ስህተት ተፈጥሯል። እባክህ እንደገና ሞክር"
-"በኋላ"
+msgstr ""
+"❌ ጾታዎን ሲያስቀምጡ ያልተጠበቀ ስህተት ተፈጥሯል። እባክዎ ቆይተው እንደገና ይሞክሩ።"
 
-#: webhook/handlers.py:428
+#: webhook/handlers.py:597
 msgid "✅ Your profile is complete!"
-msgstr "✅ ፕሮፋይልዎ ሙሉ ነው!"
+msgstr "✅ መገለጫዎ ተጠናቅቋል!"
 
-#: webhook/handlers.py:441
+#: webhook/handlers.py:610
 msgid ""
 "❌ An unexpected error occurred while saving your age. Please try again "
 "later."
-msgstr """❌ ዕድሜህን በማስቀመጥ ላይ ሳለ አንድ ያልተጠበቀ ስህተት አጋጥሟል። እባክህ እንደገና ሞክር"
-"በኋላ"
+msgstr ""
+"❌ ዕድሜዎን ሲያስቀምጡ ያልተጠበቀ ስህተት ተፈጥሯል። እባክዎ ቆይተው እንደገና ይሞክሩ።"
 
-#: webhook/handlers.py:453
-msgid "🔄 Select your new gender:"
-msgstr "🔄 አዲሱን ጾታዎን ይምረጡ፡"
+#: webhook/handlers.py:637
+msgid "👱‍♂️ Select your new gender👩‍🦰:"
+msgstr "👱‍♂️ አዲስ ጾታዎን ይምረጡ👩‍🦰:"
 
-#: webhook/handlers.py:653
-msgid "Choose the gender you want to chat with:"
-msgstr "ለመወያየት የሚፈልጉትን ጾታ ይምረጡ፡"
+#: webhook/handlers.py:656
+msgid "🙋🏻‍♂️ Male"
+msgstr "🙋🏻‍♂️ ወንድ"
 
-#: webhook/handlers.py:669
+#: webhook/handlers.py:660
+msgid "🙋🏻‍♀️ Female"
+msgstr "🙋🏻‍♀️ ሴት"
+
+#: webhook/handlers.py:665
+msgid "🌐 Any"
+msgstr "🌐 ማንኛውም"
+
+#: webhook/handlers.py:831
+msgid "💎Choose the gender you want to chat with:"
+msgstr "💎ለመወያየት የሚፈልጉትን ጾታ ይምረጡ:"
+
+#: webhook/handlers.py:848
 msgid ""
 "⏳ You are already in the search queue. Please wait for your current "
-"search to complete, or you can /stop."
-msgstr """⏳ ቀድሞውንም በፍለጋ ወረፋ ላይ ነዎት። እባክዎ ይጠብቁ"
-"ለማቁዋረጥ /stop"
+"search to complete or /stop."
+msgstr ""
+"⏳ አስቀድመው በፍለጋ ወረፋ ውስጥ ነዎት። እባክዎ የአሁኑ ፍለጋዎ እስኪያልቅ ወይም /stop እስኪሉ ድረስ ይጠብቁ።"
 
-#: webhook/handlers.py:692
-msgid "Your partner has disconnected. Use /search to find a partner."
-msgstr "አጋርዎ ግንኙነቱ ተቋርጧል። አጋር ለማግኘት /search ይጠቀሙ።"
+#: webhook/handlers.py:865
+msgid "😔Your partner has disconnected. Use /search to find a partner."
+msgstr "😔 አጋርዎ ተቋርጧል። አጋር ለማግኘት /search ይጠቀሙ።"
 
-#: webhook/handlers.py:696
+#: webhook/handlers.py:871
 msgid "You were in a chat. Disconnected."
-msgstr "ውይይት ላይ ነበሩ። ግንኙነት ተቋርጧል።"
+msgstr "በውይይት ላይ ነበሩ። ግንኙነትዎ ተቋርጧል።"
 
-#: webhook/handlers.py:708
+#: webhook/handlers.py:883
 msgid "⚠️ Could not retrieve your user info. Please try again."
-msgstr "⚠️ የተጠቃሚ መረጃዎን ሰርስሮ ማውጣት አልተቻለም። እባክህ እንደገና ሞክር።"
+msgstr "⚠️ የተጠቃሚ መረጃዎን ማግኘት አልተቻለም። እባክዎ እንደገና ይሞክሩ።"
 
-#: webhook/handlers.py:718
+#: webhook/handlers.py:895
 msgid "⚠️ Please set your gender first using /setgender."
-msgstr "⚠️ እባኮትን በመጀመሪያ ጾታዎን /setgenderን በመጠቀም ያዘጋጁ።"
+msgstr "⚠️ እባክዎ መጀመሪያ /setgender በመጠቀም ጾታዎን ያዘጋጁ።"
 
-#: webhook/handlers.py:726
+#: webhook/handlers.py:901
 msgid ""
 "💎 Gender-based matching is a VIP-only feature.\n"
 "Become a /vip member"
-msgstr """💎 በፆታ ላይ የተመሰረተ ፍለጋ  የቪአይፒ-ብቻ  ነው።\n" "የ /vip አባል ይሁኑ"
+msgstr ""
+"💎 በጾታ ላይ የተመሰረተ ተዛማጅነት የVIP አባላት ብቻ የሚያገኙት አገልግሎት ነው።\n"
+"/vip አባል ይሁኑ"
 
-#: webhook/handlers.py:738 webhook/handlers.py:968
+#: webhook/handlers.py:914 webhook/handlers.py:1148 webhook/handlers.py:1598
 msgid "🔍 Searching for a partner..."
-msgstr "🔍 አጋር መፈለግ..."
+msgstr "🔍 አጋር በመፈለግ ላይ..."
 
-#: webhook/handlers.py:781
+#: webhook/handlers.py:946
 msgid ""
 "💎 You found another VIP partner! Start chatting!\n"
 "\n"
 "/next — find a new partner\n"
 "/stop — stop this chat"
-msgstr """💎 ሌላ ቪአይፒ አጋር አግኝተዋል! መወያየት ጀምር!\n""\n"
-                    "/next - አዲስ አጋር አግኝ\n"
-            "/stop - ይህን ውይይት አቁም"
+msgstr ""
+"💎 ሌላ ቪአይፒ አጋር አግኝተዋል! መወያየት ይጀምሩ!\n"
+"\n"
+"/next — አዲስ አጋር ይፈልጉ\n"
+"/stop — ይህን ውይይት ያቁሙ"
 
-#: webhook/handlers.py:786 webhook/handlers.py:1402 webhook/handlers.py:1408
+#: webhook/handlers.py:951 webhook/handlers.py:1653 webhook/handlers.py:1660
 msgid ""
-"✅ Partner found! Start chatting!\n"
+"☺️ Partner found! Start chatting!\n"
 "\n"
 "/next — find a new partner\n"
 "/stop — stop this chat"
-msgstr """✅ አጋር ተገኝቷል! መወያየት ይጀምሩ!\n""\n"
-            "/next - አዲስ አጋር አግኝ\n"
-            "/stop - ይህን ውይይት አቁም"
+msgstr ""
+"☺️ አጋር ተገኝቷል! መወያየት ይጀምሩ!\n"
+"\n"
+"/next — አዲስ አጋር ይፈልጉ\n"
+"/stop — ይህን ውይይት ያቁሙ"
 
-#: webhook/handlers.py:793 webhook/handlers.py:1398
+#: webhook/handlers.py:957 webhook/handlers.py:1649
 msgid ""
 "💎 VIP partner found! Start chatting!\n"
 "\n"
 "/next — find a new partner\n"
 "/stop — stop this chat"
-msgstr """💎 VIP አጋር ተገኝቷል! መወያየት ይጀምሩ!\n""\n"
-            "/next - አዲስ አጋር አግኝ\n"
-            "/stop - ይህን ውይይት አቁም"
+msgstr ""
+"💎 ቪአይፒ አጋር ተገኝቷል! መወያየት ይጀምሩ!\n"
+"\n"
+"/next — አዲስ አጋር ይፈልጉ\n"
+"/stop — ይህን ውይይት ያቁሙ"
 
-#: webhook/handlers.py:802 webhook/handlers.py:1036
-msgid "😔 No partners found at the moment. Please try again later."
-msgstr "😔 በአሁኑ ጊዜ ምንም አጋሮች አልተገኙም። እባክዎ ቆይተው እንደገና ይሞክሩ።"
-
-#: webhook/handlers.py:812
+#: webhook/handlers.py:973
 msgid "❌ An unexpected error occurred during search. Please try again later."
-msgstr "❌ በፍለጋ ወቅት ያልተጠበቀ ስህተት ተፈጥሯል። እባክዎ ቆይተው እንደገና ይሞክሩ።"
+msgstr "❌ በፍለጋ ጊዜ ያልተጠበቀ ስህተት ተፈጥሯል። እባክዎ ቆይተው እንደገና ይሞክሩ።"
 
-#: webhook/handlers.py:901
+#: webhook/handlers.py:1033
+msgid "🏙️ Search by City"
+msgstr "🏙️ በከተማ ይፈልጉ"
+
+#: webhook/handlers.py:1036
+msgid "🙋🏻‍♂️ Search by Gender🙋🏻‍♀️"
+msgstr "🙋🏻‍♂️ በጾታ ይፈልጉ🙋🏻‍♀️"
+
+#: webhook/handlers.py:1072
 msgid "Please share your live location:"
-msgstr "እባክዎን የቀጥታ አካባቢዎን ያጋሩ፡"
+msgstr "እባክዎ የቀጥታ አካባቢዎን ያጋሩ:"
 
-#: webhook/handlers.py:949
+#: webhook/handlers.py:1129
 msgid ""
 "⏳ You are already in the search queue. Please wait for your current "
 "search to complete, or you can /stop"
-msgstr "⏳ ቀድሞውንም በፍለጋ ወረፋ ላይ ነዎት። እባክዎን ይቆዩ ወይም መሰረዝ ከፈለጉ /stop ይጠቀሙ።" 
+msgstr ""
+"⏳ አስቀድመው በፍለጋ ወረፋ ውስጥ ነዎት። እባክዎ የአሁኑ ፍለጋዎ እስኪያልቅ ድረስ ይጠብቁ፣ ወይም /stop ማድረግ ይችላሉ።"
 
-#: webhook/handlers.py:957
+#: webhook/handlers.py:1136
 msgid ""
 "🤔 You are already in a dialog right now.\n"
 "/next — find a new partner\n"
 "/stop — stop this dialog"
-msgstr """🤔 አሁን በውይይት ላይ ነዎት።\n"
-            "/next - አዲስ አጋር አግኝ\n"
-            "/search - ይህን ንግግር አቁም"
+msgstr ""
+"🤔 በአሁኑ ጊዜ በውይይት ላይ ነዎት።\n"
+"/next — አዲስ አጋር ይፈልጉ\n"
+"/stop — ይህን ውይይት ያቁሙ"
 
-#: webhook/handlers.py:1015
+#: webhook/handlers.py:1194
 msgid ""
 "💎 You found another VIP partner! Start chatting!\n"
 "\n"
 "/next — new partner\n"
 "/stop — end chat"
-msgstr """💎 ሌላ ቪአይፒ አጋር አግኝተዋል! መወያየት ይጀምሩ!\n"
+msgstr ""
+"💎 ሌላ ቪአይፒ አጋር አግኝተዋል! መወያየት ይጀምሩ!\n"
 "\n"
-"/next - አዲስ አጋር\n"
-"/stop - ውይይትን ጨርስ"
+"/next — አዲስ አጋር\n"
+"/stop — ውይይት ያቁሙ"
 
-#: webhook/handlers.py:1020
+#: webhook/handlers.py:1199
 msgid ""
-"✅ Partner found! Start chatting!\n"
+"☺️ Partner found! Start chatting!\n"
 "\n"
 "/next — new partner\n"
 "/stop — end chat"
-msgstr """✅ አጋር ተገኝቷል! መወያየት ይጀምሩ!\n"
+msgstr ""
+"☺️ አጋር ተገኝቷል! መወያየት ይጀምሩ!\n"
 "\n"
-"/next - አዲስ አጋር\n"
-"/stop - ውይይትን ጨርስ"
+"/next — አዲስ አጋር\n"
+"/stop — ውይይት ያቁሙ"
 
-#: webhook/handlers.py:1027
+#: webhook/handlers.py:1205
 msgid ""
 "💎 VIP partner found! Start chatting!\n"
 "\n"
 "/next — new partner\n"
 "/stop — end chat"
-msgstr """💎 ቪአይፒ አጋር ተገኝቷል! መወያየት ይጀምሩ!\n"
+msgstr ""
+"💎 ቪአይፒ አጋር ተገኝቷል! መወያየት ይጀምሩ!\n"
 "\n"
-"/next - አዲስ አጋር\n"
-"/stop - ውይይትን ጨርስ"
+"/next — አዲስ አጋር\n"
+"/stop — ውይይት ያቁሙ"
 
-#: webhook/handlers.py:1048
-msgid "You are not in an active chat. /search to find a partner."
-msgstr "በውይይት ውስጥ አይደሉም። ውይይት /search  ለመጀመር"
+#: webhook/handlers.py:1263
+msgid "😔 Your partner has stopped the chat. /search to find a new partner"
+msgstr "😔 አጋርዎ ውይይቱን አቁሟል። አዲስ አጋር ለማግኘት /search ይጠቀሙ"
 
-#: webhook/handlers.py:1082
-msgid "✅ Your partner has stopped the chat. /search to find a new partner"
-msgstr "✅ አጋርዎ ቻቱን አቁሟል።/search አጋር ለማግኘት ይጠቀሙ"
-
-#: webhook/handlers.py:1090
-msgid "✅ Chat stopped. /search to find a new partner"
-msgstr "✅ቻት ቆሟል።/search አጋር ለማግኘት  ይጠቀሙ"
-
-#: webhook/handlers.py:1099 webhook/handlers.py:1103 webhook/handlers.py:1540
-#: webhook/handlers.py:1547
+#: webhook/handlers.py:1270 webhook/handlers.py:1281 webhook/handlers.py:1810
+#: webhook/handlers.py:1819
 msgid "How was your experience with your last partner?"
-msgstr "ከመጨረሻ አጋርዎ ጋር ያለዎት ልምድ እንዴት ነበር?"
+msgstr "ከመጨረሻው አጋርዎ ጋር ያለዎት ተሞክሮ እንዴት ነበር?"
 
-#: webhook/handlers.py:1114
+#: webhook/handlers.py:1276
+msgid "✅ Chat stopped. /search to find a new partner"
+msgstr "✅ ውይይት ቆሟል። አዲስ አጋር ለማግኘት /search ይጠቀሙ"
+
+#: webhook/handlers.py:1294
 msgid "There was an issue stopping the chat."
-msgstr "ውይይቱን የማቆም ችግር ነበር።"
+msgstr "ውይይቱን በማቆም ላይ ችግር ተፈጥሯል።"
 
-#: webhook/handlers.py:1125
-msgid "🔄 Change Gender"
-msgstr "🔄 ፆታ ቀይር"
+#: webhook/handlers.py:1311
+msgid "✅ Your search has been stopped. /search to start again."
+msgstr "✅ ፍለጋዎ ቆሟል። እንደገና ለመጀመር /search ይጠቀሙ።"
 
-#: webhook/handlers.py:1129
+#: webhook/handlers.py:1317
+msgid "🤔 You are not in an active chat or searching. /search to find a partner."
+msgstr "🤔 በአሁኑ ጊዜ በውይይት ላይ አይደሉም ወይም እየፈለጉ አይደለም። አጋር ለማግኘት /search ይጠቀሙ።"
+
+#: webhook/handlers.py:1347
+msgid "👱‍♂️Change Gender👩‍🦰"
+msgstr "👱‍♂️ጾታ ይቀይሩ👩‍🦰"
+
+#: webhook/handlers.py:1352
 msgid "📍 Set Location"
-msgstr "📍 አካባቢ አዘጋጅ"
+msgstr "📍 አካባቢ ያዘጋጁ"
 
-#: webhook/handlers.py:1133
+#: webhook/handlers.py:1357
 msgid "🎂 Set Age"
-msgstr "🎂 ዕድሜ አዘጋጅ"
+msgstr "🎂 ዕድሜ ያዘጋጁ"
 
-#: webhook/handlers.py:1138
+#: webhook/handlers.py:1362
+msgid "🌐 Set Language"
+msgstr "🌐 ቋንቋ ያዘጋጁ"
+
+#: webhook/handlers.py:1368
 msgid "⚙️ Choose what you want to update:"
-msgstr "⚙️ ማዘመን የሚፈልጉትን ይምረጡ፡"
+msgstr "⚙️ ማዘመን የሚፈልጉትን ይምረጡ:"
 
-#: webhook/handlers.py:1234
+#: webhook/handlers.py:1376
+msgid ""
+"❌ An unexpected error occurred while loading settings. Please try again "
+"later."
+msgstr ""
+"❌ ቅንብሮችን በሚጫኑበት ጊዜ ያልተጠበቀ ስህተት ተፈጥሯል። እባክዎ ቆይተው እንደገና ይሞክሩ።"
+
+#: webhook/handlers.py:1479
 #, python-brace-format
 msgid ""
-"💰 You earned 10 credits!\n"
+"💰 You earned 20 credits!\n"
 "Your total credits: {new_credits}"
-msgstr """💰 10 ክሬዲት አግኝተዋል!\n"
-"ጠቅላላ ክሬዲቶችዎ: {new_credits}"
+msgstr ""
+"💰 20 ክሬዲት አግኝተዋል!\n"
+"ጠቅላላ ክሬዲትዎ: {new_credits}"
 
-#: webhook/handlers.py:1246
+#: webhook/handlers.py:1490
 msgid "❌ An error occurred while adding credits. Please try again later."
-msgstr "❌ ክሬዲቶችን በማከል ላይ ስህተት ተፈጥሯል። እባክዎ ቆይተው እንደገና ይሞክሩ።"
+msgstr "❌ ክሬዲቶችን ሲጨምሩ ስህተት ተፈጥሯል። እባክዎ ቆይተው እንደገና ይሞክሩ።"
 
-#: webhook/handlers.py:1267
+#: webhook/handlers.py:1526
 msgid ""
 "Please wait for your previous search request to finish, or /stop to "
 "cancel."
-msgstr "❌ ክሬዲቶችን በማከል ላይ ስህተት ተፈጥሯል። እባክዎ ቆይተው እንደገና ይሞክሩ።"
+msgstr ""
+"እባክዎ የቀድሞው የፍለጋ ጥያቄዎ እስኪያልቅ ድረስ ይጠብቁ፣ ወይም ለመሰረዝ /stop ይጠቀሙ።"
 
-#: webhook/handlers.py:1293
+#: webhook/handlers.py:1546
 msgid ""
 "You have reached your daily search limit or have no credits. Use /credit "
 "to get more searches."
 msgstr ""
+"የእለታዊ ፍለጋ ገደብዎ ላይ ደርሰዋል ወይም ክሬዲት የለዎትም። ተጨማሪ ፍለጋዎችን ለማግኘት /credit ይጠቀሙ።"
 
-#: webhook/handlers.py:1321
+#: webhook/handlers.py:1570
 msgid "Your partner has disconnected to /search for someone new."
-msgstr "ዕለታዊ ፍለጋ ገደብዎ ላይ ደርሰዋል ወይም ምንም ክሬዲት የሎትም። ተጨማሪ ፍለጋዎችን ለማግኘት /credit ይጠቀሙ።"
+msgstr "አጋርዎ ግንኙነቱን አቋርጧል፣ አዲስ ሰው ለመፈለግ /search ይጠቀሙ።"
 
-#: webhook/handlers.py:1327
+#: webhook/handlers.py:1578
 msgid ""
 "You have been disconnected from your previous chat. Searching for a new "
 "partner."
-msgstr "ከቀደመው ቻትዎ ተለያይተዋል። አዲስ አጋር በመፈለግ ላይ..."
+msgstr ""
+"ከቀድሞው ውይይትዎ ግንኙነትዎ ተቋርጧል። አዲስ አጋር እየፈለግን ነው።"
 
-#: webhook/handlers.py:1346
-msgid "🔍Searching for a partner..."
-msgstr "🔍 አጋርን በመፈለግ ላይ..."
+#: webhook/handlers.py:1752 webhook/handlers.py:2163
+msgid "An internal error occurred. Please try again later."
+msgstr "የውስጥ ስህተት ተፈጥሯል። እባክዎ ቆይተው እንደገና ይሞክሩ።"
 
-#: webhook/handlers.py:1417
-msgid "😔 No users are currently available for chat. Removed from search queue."
-msgstr "😔 ምንም ተጠቃሚ በአሁኑ ጊዜ ለውይይት አይገኝም። ከፍለጋ ወረፋ ተወግዷል።"
-
-#: webhook/handlers.py:1502
+#: webhook/handlers.py:1775
 #, python-brace-format
 msgid "🚫 You are banned until {banned_time}."
 msgstr "🚫 እስከ {banned_time} ድረስ ታግደዋል።"
 
-#: webhook/handlers.py:1536
+#: webhook/handlers.py:1804
 msgid "Your partner ended the chat. /search to find a new partner"
-msgstr "የእርስዎ አጋር /search ሰው ለመፈለግ ግንኙነን አቁሙዋል ።"
+msgstr "አጋርዎ ውይይቱን አቁሟል። አዲስ አጋር ለማግኘት /search ይጠቀሙ።"
 
-#: webhook/handlers.py:1551
+#: webhook/handlers.py:1824
 msgid "You're not currently in a chat."
-msgstr "በአሁኑ ጊዜ በውይይት ውስጥ አይደሉም።"
+msgstr "በአሁኑ ጊዜ በውይይት ላይ አይደሉም።"
 
-#: webhook/handlers.py:1689
+#: webhook/handlers.py:1963
+msgid ""
+"❌ An unexpected error occurred while retrieving the privacy policy. "
+"Please try again later."
+msgstr ""
+"❌ የግላዊነት ፖሊሲውን በሚያገኙበት ጊዜ ያልተጠበቀ ስህተት ተፈጥሯል። እባክዎ ቆይተው እንደገና ይሞክሩ።"
+
+#: webhook/handlers.py:1992
 msgid ""
 "🎉 You already have 💎 **VIP access**!\n"
 "Enjoy all premium features."
-msgstr """🎉 💎 የቪአይፒ ተጠቃሚ ኖት!\n""በሁሉም ፕሪሚየም ባህሪያት ይደሰቱ።"
+msgstr ""
+"🎉 አስቀድመው 💎 **ቪአይፒ መዳረሻ** አለዎት!\n"
+"ሁሉንም ፕሪሚየም አገልግሎቶች ይደሰቱ።"
 
-#: webhook/handlers.py:1702
+#: webhook/handlers.py:2005
 msgid ""
 "<b>💎 Become a VIP User</b>\n"
-"Support the chat and unlock premium features instantly.\n"
+"\n"
+"<b>🧭 Search in Your Own City</b> – Meet people nearby and spark local "
+"connections.\n"
+"<b>🚻 Gender-Based Searching</b> – Choose who you chat with.\n"
+"<b>⏳ Unlimited Searches</b> – No limits, keep exploring as much as you "
+"want.\n"
+"<b>🚫 Ad-Free Experience</b> – Enjoy chatting without any interruptions.\n"
+"<b>💎 Visible VIP Status</b> – Stand out with a special badge.\n"
+"<b>🤍 Support the Bot</b> – Help us grow and keep the service running.\n"
+"👨🏻‍💻 If you have any questions, do not hesitate to get in touch "
+"@YourBotSupport\n"
 "\n"
 "<b>Choose your preferred payment method:</b>"
-msgstr """<b>💎 ቪአይፒ ተጠቃሚ ይሁኑ</b>\n"
-            "ቻቱን ይደግፉ እና ዋና ባህሪያትን በቅጽበት ይክፈቱ።\n""\n"
-            "<b>የመረጡትን የመክፈያ ዘዴ ይምረጡ፡</b>"
+msgstr ""
+"<b>💎 ቪአይፒ ተጠቃሚ ይሁኑ</b>\n"
+"\n"
+"<b>🧭 በራስዎ ከተማ ይፈልጉ</b> – በአቅራቢያ ያሉ ሰዎችን ያግኙ እና የአካባቢ ግንኙነቶችን ይፍጠሩ።\n"
+"<b>🚻 በጾታ ላይ የተመሰረተ ፍለጋ</b> – ከማን ጋር መወያየት እንደሚፈልጉ ይምረጡ።\n"
+"<b>⏳ ያልተገደበ ፍለጋ</b> – ገደብ የለም፣ የፈለጉትን ያህል መፈለግዎን ይቀጥሉ።\n"
+"<b>🚫 ከማስታወቂያ ነጻ ተሞክሮ</b> – ያለ ምንም መቆራረጥ መወያየት ይደሰቱ።\n"
+"<b>💎 የሚታይ ቪአይፒ ሁኔታ</b> – በልዩ ባጅ ጎልተው ይታዩ።\n"
+"<b>🤍 ቦቱን ይደግፉ</b> – እንድናድግ እና አገልግሎቱን እንዲቀጥል ይረዱን።\n"
+"👨🏻‍💻 ማንኛውም ጥያቄ ካለዎት፣ @YourBotSupport ላይ እኛን ለማግኘት አያመንቱ።\n"
+"\n"
+"<b>የሚመርጡትን የክፍያ ዘዴ ይምረጡ:</b>"
 
-#: webhook/handlers.py:1708
+#: webhook/handlers.py:2017
 msgid "🧾 Telegram Payments"
-msgstr "🧾 Telegram Payments"
+msgstr "🧾 ቴሌግራም ክፍያዎች"
 
-#: webhook/handlers.py:1712
+#: webhook/handlers.py:2020
 msgid "💳 Chapa Payments"
-msgstr "💳 Chapa Payments"
+msgstr "💳 ቻፓ ክፍያዎች"
 
-#: webhook/handlers.py:1734
+#: webhook/handlers.py:2055
 #, python-brace-format
 msgid "Your User ID is: `{user_id}`"
-msgstr "የእርስዎ የተጠቃሚ መታወቂያ፡ `{user_id}` ነው።"
+msgstr "የተጠቃሚ መታወቂያዎ: `{user_id}`"
 
-#: webhook/handlers.py:1788
+#: webhook/handlers.py:2064
+msgid ""
+"❌ An unexpected error occurred while retrieving your User ID. Please try "
+"again later."
+msgstr ""
+"❌ የተጠቃሚ መታወቂያዎን በሚያገኙበት ጊዜ ያልተጠበቀ ስህተት ተፈጥሯል። እባክዎ ቆይተው እንደገና ይሞክሩ።"
+
+#: webhook/handlers.py:2121
 #, python-brace-format
 msgid "✅ Your age has been set to: **{age}**"
-msgstr "✅ ዕድሜ ወደ: **{age}**"
+msgstr "✅ ዕድሜዎ ወደ: **{age}** ተቀናብሯል"
 
-#: webhook/handlers.py:1797
+#: webhook/handlers.py:2131
 msgid "❌ An error occurred while saving your age. Please try again later."
-msgstr "❌ ዕድሜዎትን በማስቀመጥ ላይ ስህተት አጋጥሟል። እባክዎ ቆይተው እንደገና ይሞክሩ።"
+msgstr "❌ ዕድሜዎን ሲያስቀምጡ ስህተት ተፈጥሯል። እባክዎ ቆይተው እንደገና ይሞክሩ።"
 
-#: webhook/handlers.py:1805
+#: webhook/handlers.py:2136
 msgid "❌ Please enter a valid age between 10 and 100."
-msgstr "❌ እባክዎ በ10 እና 100 መካከል የሚሰራ ዕድሜ ያስገቡ።"
+msgstr "❌ እባክዎ በ10 እና በ100 መካከል ትክክለኛ ዕድሜ ያስገቡ።"
 
-#: webhook/handlers.py:1810
+#: webhook/handlers.py:2141
 msgid "❌ Please enter a valid numeric age."
 msgstr "❌ እባክዎ ትክክለኛ የቁጥር ዕድሜ ያስገቡ።"
 
-#: webhook/handlers.py:1831
-msgid "An internal error occurred. Please try again later."
-msgstr "የውስጥ ስህተት ተከስቷል። እባክዎ ቆይተው እንደገና ይሞክሩ።"
-
-#: webhook/handlers.py:1846
+#: webhook/handlers.py:2177
 msgid ""
 "💎 City-based matching is a **VIP-only feature**.\n"
 "Become a /vip member to unlock it!"
-msgstr """💎 ከተማን መሰረት ያደረገ ማዛመድ የቪአይፒ-ብቻ  ነው።\n""የ/vip አባል ይሁኑ"
+msgstr ""
+"💎 በከተማ ላይ የተመሰረተ ተዛማጅነት **ለቪአይፒዎች ብቻ የሚገኝ ባህሪ** ነው።\n"
+"ለመክፈት /vip አባል ይሁኑ!"
 
-#: webhook/handlers.py:1855
+#: webhook/handlers.py:2186
 msgid "📍 Please share your location first using the /setlocation command."
-msgstr "📍 እባክዎ መጀመሪያ አካባቢዎን /setlocation ን በመጠቀም ያካፍሉ።"
+msgstr "📍 እባክዎ መጀመሪያ /setlocation ትዕዛዙን በመጠቀም አካባቢዎን ያጋሩ።"
 
-#: webhook/handlers.py:1862
+#: webhook/handlers.py:2195
 msgid "⚠️ You're already in a chat. Use /stop to end it first before searching."
-msgstr "⚠️ ቀድሞውኑ ቻት ላይ ነዎት። መጀመሪያ ለማቋረጥ /stop ይጠቀሙ።"
+msgstr "⚠️ አስቀድመው በውይይት ላይ ነዎት። ከመፈለግዎ በፊት ለማቆም /stop ይጠቀሙ።"
 
-#: webhook/handlers.py:1870
+#: webhook/handlers.py:2204
 msgid "⏳ You're already searching. Please wait or use /stop to cancel."
-msgstr "⏳ ቀድሞውንም አጋር እየፈለጉ ነው። እባክዎን ይቆዩ ወይም መሰረዝ ከፈለጉ /stop ይጠቀሙ።"
+msgstr "⏳ አስቀድመው እየፈለጉ ነው። እባክዎ ይጠብቁ ወይም ለመሰረዝ /stop ይጠቀሙ።"
 
-#: webhook/handlers.py:1883
+#: webhook/handlers.py:2221
 msgid "🔍 Searching for a partner in your city..."
-msgstr "🔍 በከተማዎ አጋርን መፈለግ..."
+msgstr "🔍 በከተማዎ ውስጥ አጋር በመፈለግ ላይ..."
 
-#: webhook/handlers.py:1935 webhook/handlers.py:1942
+#: webhook/handlers.py:2273
 msgid ""
 "💎 **VIP City Match Found!** You're now chatting with another **VIP** "
 "member in your city.\n"
 "\n"
-"/next — find a new partner\n"
-"/stop — end chat"
 msgstr ""
-"💎 **የቪአይፒ ከተማ አጋር ተገኝቷል!** አሁን በከተማዎ ውስጥ ካለ ከሌላ **VIP** አባል ጋር እየተወያዩ ነው።\n\n"
-"/next — አዲስ አጋር አግኝ\n""/stop — ውይይትን ጨርስ"
-#: webhook/handlers.py:1937 webhook/handlers.py:1944
+"💎 **የቪአይፒ ከተማ ተዛማጅ ተገኝቷል!** አሁን በከተማዎ ውስጥ ካለ ሌላ **ቪአይፒ** አባል ጋር እየተወያዩ ነው።\n"
+"\n"
+
+#: webhook/handlers.py:2276
 msgid ""
 "🏙️ **City Match Found!** You're now chatting with someone in your city.\n"
 "\n"
-"/next — find a new partner\n"
-"/stop — end chat"
-msgstr """🏙️ **የከተማ አጋር ተገኝቷል!** አሁን በከተማዎ ውስጥ ካለ ሰው ጋር እየተወያዩ ነው።\n\n"
-"/next — አዲስ አጋር አግኝ\n""/stop — ውይይትን ጨርስ"
+msgstr ""
+"🏙️ **የከተማ ተዛማጅ ተገኝቷል!** አሁን በከተማዎ ውስጥ ካለ ሰው ጋር እየተወያዩ ነው።\n"
+"\n"
 
-#: webhook/handlers.py:1956
+#: webhook/handlers.py:2304
 msgid ""
 "😔 No active users are available in your city right now. You'll stay in "
 "the search queue and be matched as soon as someone nearby becomes "
 "available."
-msgstr "😔 በአሁኑ ጊዜ በከተማዎ ውስጥ ምንም ተጠቃሚ የለም። የሆነ ሰው ሲገኝ ምልክት ይደረርሶታል።"
+msgstr ""
+"😔 በአሁኑ ጊዜ በከተማዎ ውስጥ ንቁ ተጠቃሚዎች የሉም። በፍለጋ ወረፋ ውስጥ ይቆያሉ እና በአቅራቢያ ያለ ሰው እንደተገኘ ይገናኛሉ።"
 
-#: webhook/handlers.py:1966
+#: webhook/handlers.py:2315
 msgid ""
 "❌ An unexpected error occurred while searching for a city partner. Please"
 " try again later."
-msgstr "❌ የከተማ አጋርን በመፈለግ ላይ ሳለ ያልተጠበቀ ስህተት ተፈጥሯል። እባክዎ ቆይተው እንደገና ይሞክሩ።"
+msgstr ""
+"❌ የከተማ አጋር ሲፈልጉ ያልተጠበቀ ስህተት ተፈጥሯል። እባክዎ ቆይተው እንደገና ይሞክሩ።"
 
-#: webhook/handlers.py:1978
+#: webhook/handlers.py:2340
 msgid ""
 "🤖 You're not in a chat right now.\n"
 "\n"
 "Tap /Search to start chatting."
-msgstr """🤖 በአሁኑ ጊዜ በውይይት ውስጥ አይደሉም።\n"
+msgstr ""
+"🤖 በአሁኑ ጊዜ በውይይት ላይ አይደሉም።\n"
 "\n"
-"/Search ን በመንካት ውይይት ይጀምሩ።"
+"ውይይት ለመጀመር /Search የሚለውን ይጫኑ።"
 
-#: webhook/handlers.py:2225
-msgid "👍 Good"
-msgstr "👍 ጥሩ"
+#: webhook/handlers.py:2609
+msgid "👍"
+msgstr "👍"
 
-#: webhook/handlers.py:2231
-msgid "👎 Bad"
-msgstr "👎 መጥፎ"
+#: webhook/handlers.py:2611
+msgid "👎"
+msgstr "👎"
 
-#: webhook/handlers.py:2237
+#: webhook/handlers.py:2616
 msgid "⚠️ Report"
-msgstr "⚠️ ሪፖርት አድርግ"
+msgstr "⚠️ ሪፖርት"
 
-#: webhook/handlers.py:2247 webhook/handlers.py:2267
+#: webhook/handlers.py:2637 webhook/handlers.py:2675
 msgid "Your feedback has been submitted successfully."
-msgstr "የእርስዎ አስተያየት በተሳካ ሁኔታ ገብቷል።"
+msgstr "ግብረመልስዎ በተሳካ ሁኔታ ቀርቧል።"
 
-#: webhook/handlers.py:2285
+#: webhook/handlers.py:2654 webhook/handlers.py:2692
+msgid ""
+"❌ An unexpected error occurred while submitting your feedback. Please try"
+" again later."
+msgstr ""
+"❌ ግብረመልስዎን በሚያስገቡበት ጊዜ ያልተጠበቀ ስህተት ተፈጥሯል። እባክዎ ቆይተው እንደገና ይሞክሩ።"
+
+#: webhook/handlers.py:2713
 msgid "📢 Advertising"
 msgstr "📢 ማስታወቂያ"
 
-#: webhook/handlers.py:2291
+#: webhook/handlers.py:2718
 msgid "💰 Selling"
 msgstr "💰 መሸጥ"
 
-#: webhook/handlers.py:2297
+#: webhook/handlers.py:2722
 msgid "🔞 Child Pornography"
-msgstr "🔞"
+msgstr "🔞 የህጻናት ወሲባዊ ምስሎች"
 
-#: webhook/handlers.py:2303
+#: webhook/handlers.py:2727
 msgid "🤲 Begging"
-msgstr "🤲 ልመና"
+msgstr "🤲 መለመን"
 
-#: webhook/handlers.py:2309
+#: webhook/handlers.py:2731
 msgid "😡 Insult"
 msgstr "😡 ስድብ"
 
-#: webhook/handlers.py:2315
+#: webhook/handlers.py:2735
 msgid "🪓 Violence"
-msgstr "🪓 ብጥብጥ"
+msgstr "🪓 ጥቃት"
 
-#: webhook/handlers.py:2321
+#: webhook/handlers.py:2739
 msgid "🌍 Racism"
 msgstr "🌍 ዘረኝነት"
 
-#: webhook/handlers.py:2327
+#: webhook/handlers.py:2743
 msgid "🤬 Vulgar Partner"
-msgstr "🤬 ቊልጋር አጋር"
+msgstr "🤬 ብልግና አጋር"
 
-#: webhook/handlers.py:2333
+#: webhook/handlers.py:2748
 msgid "🔙 Back"
 msgstr "🔙 ተመለስ"
 
-#: webhook/handlers.py:2344
+#: webhook/handlers.py:2772
 msgid "⚠️ Please select a reason to report your partner:"
-msgstr "⚠️ እባክዎን አጋርዎን ሪፖርት ለማድረግ ምክንያት ይምረጡ፡"
+msgstr "⚠️ እባክዎ አጋርዎን ሪፖርት ለማድረግ ምክንያት ይምረጡ:"
 
-#: webhook/handlers.py:2375
+#: webhook/handlers.py:2782
+msgid ""
+"❌ An unexpected error occurred while showing report options. Please try "
+"again later."
+msgstr ""
+"❌ የሪፖርት አማራጮችን በሚያሳዩበት ጊዜ ያልተጠበቀ ስህተት ተፈጥሯል። እባክዎ ቆይተው እንደገና ይሞክሩ።"
+
+#: webhook/handlers.py:2852
 msgid "✅ Your report has been submitted. Thank you!"
 msgstr "✅ ሪፖርትዎ ቀርቧል። እናመሰግናለን!"
 
-#: webhook/handlers.py:2390
+#: webhook/handlers.py:2860
+msgid ""
+"❌ An unexpected error occurred while submitting your report. Please try "
+"again later."
+msgstr ""
+"❌ ሪፖርትዎን በሚያስገቡበት ጊዜ ያልተጠበቀ ስህተት ተፈጥሯል። እባክዎ ቆይተው እንደገና ይሞክሩ።"
+
+#: webhook/handlers.py:2888
 msgid "100 ⭐ / $1.99 a week"
-msgstr "100 ⭐ / $1.99 a week"
+msgstr "100 ⭐ / $1.99 በሳምንት"
 
-#: webhook/handlers.py:2394
+#: webhook/handlers.py:2890
 msgid "250 ⭐ / $3.99 a month"
-msgstr "250 ⭐ / $3.99 a month"
+msgstr "250 ⭐ / $3.99 በወር"
 
-#: webhook/handlers.py:2398
+#: webhook/handlers.py:2892
 msgid "1000 ⭐ / $19.99 a year"
-msgstr "1000 ⭐ / $19.99 a year"
+msgstr "1000 ⭐ / $19.99 በዓመት"
 
-#: webhook/handlers.py:2413
+#: webhook/handlers.py:2921
 msgid "💫 Choose your plan with Telegram Stars:"
-msgstr "💫 Choose your plan with Telegram Stars:"
+msgstr "💫 እቅድዎን በቴሌግራም ስታርስ ይምረጡ:"
 
-#: webhook/handlers.py:2431
+#: webhook/handlers.py:2942
 msgid "1 Month - 400 ETB"
 msgstr "1 ወር - 400 ብር"
 
-#: webhook/handlers.py:2435
+#: webhook/handlers.py:2945
 msgid "6 Months - 1500 ETB"
-msgstr "6 ወራት - 1500 ብር"
+msgstr "6 ወር - 1500 ብር"
 
-#: webhook/handlers.py:2439
+#: webhook/handlers.py:2948
 msgid "1 Year - 2500 ETB"
-msgstr "1 አመት - 2500 ብር"
+msgstr "1 ዓመት - 2500 ብር"
 
-#: webhook/handlers.py:2454
+#: webhook/handlers.py:2977
 msgid "Choose your Chapa plan:"
-msgstr "Choose your Chapa plan:"
+msgstr "የቻፓ እቅድዎን ይምረጡ:"
 
-#: webhook/handlers.py:2489
+#: webhook/handlers.py:3015
 msgid "Invalid plan selected."
-msgstr "Invalid plan selected."
+msgstr "ትክክል ያልሆነ እቅድ ተመርጧል።"
 
-#: webhook/handlers.py:2497
+#: webhook/handlers.py:3025
 msgid "Preparing Chapa payment..."
-msgstr "የchapa ክፍያን በማዘጋጀት ላይ..."
+msgstr "የቻፓ ክፍያ በመዘጋጀት ላይ..."
 
-#: webhook/handlers.py:2514
+#: webhook/handlers.py:3051
 msgid "VIP Subscription"
-msgstr "ቪአይፒ ምዝገባ"
+msgstr "ቪአይፒ የደንበኝነት ምዝገባ"
 
-#: webhook/handlers.py:2515
+#: webhook/handlers.py:3053
 msgid "Unlock VIP features in the bot"
-msgstr "በቦት ውስጥ የቪአይፒ ባህሪያትን ይክፈቱ"
+msgstr "በቦቱ ውስጥ የቪአይፒ ባህሪያትን ይክፈቱ"
 
-#: webhook/handlers.py:2528
+#: webhook/handlers.py:3070
 msgid "❌ Chapa's response was unreadable. Please try again later."
-msgstr "❌ Chapa's response was unreadable. Please try again later."
+msgstr "❌ የቻፓ ምላሽ ሊነበብ አልቻለም። እባክዎ ቆይተው እንደገና ይሞክሩ።"
 
-#: webhook/handlers.py:2559
+#: webhook/handlers.py:3094
 msgid "⚠ Payment prepared, but failed to save record. Please contact support."
-msgstr "⚠ ክፍያ ተዘጋጅቷል፣ ግን ሪኮርድን ማስቀመጥ አልቻለም። እባክዎ ድጋፍን ያግኙ።"
+msgstr "⚠ ክፍያ ተዘጋጅቷል፣ ነገር ግን መዝገብ ማስቀመጥ አልተቻለም። እባክዎ ድጋፍን ያግኙ።"
 
-#: webhook/handlers.py:2568
+#: webhook/handlers.py:3100
 msgid "✅ Pay with Chapa"
-msgstr "✅ በchapa ይክፈሉ።"
+msgstr "✅ በቻፓ ይክፈሉ"
 
-#: webhook/handlers.py:2570
+#: webhook/handlers.py:3105
 msgid "💳 Click below to complete your payment securely:"
-msgstr "💳 ክፍያዎን ደህንነቱ በተጠበቀ ሁኔታ ለማጠናቀቅ ከታች ጠቅ ያድርጉ፡-"
+msgstr "💳 ክፍያዎን በአስተማማኝ ሁኔታ ለማጠናቀቅ ከታች ይጫኑ:"
 
-#: webhook/handlers.py:2579
+#: webhook/handlers.py:3116
 msgid "❌ Failed to create payment. Please try again later."
-msgstr "❌ ክፍያ መፍጠር አልተሳካም። እባክዎ ቆይተው እንደገና ይሞክሩ።"
+msgstr "❌ ክፍያ መፍጠር አልተቻለም። እባክዎ ቆይተው እንደገና ይሞክሩ።"
 
-#: webhook/handlers.py:2585
+#: webhook/handlers.py:3123
 msgid ""
 "❌ Network error during payment initiation. Please check your connection "
 "and try again."
 msgstr ""
-"❌ ክፍያ በሚጀመርበት ጊዜ የአውታረ መረብ ስህተት። እባክዎ ግንኙነትዎን ያረጋግጡ\n"
-"እና እንደገና ይሞክሩ።"
+"❌ ክፍያ በሚጀምሩበት ጊዜ የአውታረ መረብ ስህተት። እባክዎ ግንኙነትዎን ያረጋግጡ እና እንደገና ይሞክሩ።"
 
-#: webhook/handlers.py:2590
+#: webhook/handlers.py:3130
 msgid ""
 "❌ An unexpected error occurred while processing your payment. Please try "
 "again later."
-msgstr "❌ ክፍያዎን በማካሄድ ላይ ሳለ ያልተጠበቀ ስህተት ተፈጥሯል። እባክህ ሞክር እንደገና በኋላ።"
+msgstr ""
+"❌ ክፍያዎን በሚሰራበት ጊዜ ያልተጠበቀ ስህተት ተፈጥሯል። እባክዎ ቆይተው እንደገና ይሞክሩ።"
 
-#: webhook/handlers.py:2797
+#: webhook/handlers.py:3300
 #, python-brace-format
 msgid ""
 "⏰ Your VIP subscription will expire in less than {hours} hours "
@@ -619,87 +742,105 @@ msgid ""
 "\n"
 "Don't lose access to exclusive features like city-based matching. Renew "
 "your VIP status now: /vip"
-msgstr """⏰ የቪአይፒ ምዝገባዎ ከ {hours} ሰዓታት ባነሰ ጊዜ ውስጥ (እስከ {expiry_date}) "
-"ጊዜው ያበቃል!\n"
+msgstr ""
+"⏰ የቪአይፒ ምዝገባዎ ከ{hours} ሰዓታት ባነሰ ጊዜ ውስጥ ({expiry_date}) ያልቃል!\n"
 "\n"
-"እንደ ከተማ-ተኮር ግጥሚያ ያሉ ልዩ ባህሪያትን እንዳያጡ። የቪአይፒ ሁኔታዎን አሁኑኑ "
-"ያድሱ: /vip"
+"እንደ ከተማ ላይ የተመሰረተ ተዛማጅነት ያሉ ልዩ ባህሪያትን እንዳያጡ። የቪአይፒ ደረጃዎን አሁን ያድሱ: /vip"
 
-#: webhook/handlers.py:2855
+#: webhook/handlers.py:3354
 msgid ""
 "😔 Your VIP subscription has expired. You no longer have access to "
 "exclusive features.\n"
 "\n"
 "Renew your VIP access anytime to unlock all premium benefits: /vip"
 msgstr ""
-"😔 የቪአይፒ ምዝገባዎ ጊዜው አልፎበታል። ለየት ያሉ ባህሪያትን መጠቀም አይችሉም።\n"
+"😔 የቪአይፒ ምዝገባዎ አልቋል። ከዚህ በኋላ ልዩ ባህሪያት ላይ መድረስ አይችሉም።\n"
 "\n"
-"ሁሉንም ፕሪሚየም ጥቅሞች ለመክፈት የቪአይፒ መዳረሻዎን በማንኛውም ጊዜ ያድሱ: /vip"
-#: webhook/handlers.py:2980
+"ሁሉንም ፕሪሚየም ጥቅሞችን ለመክፈት የቪአይፒ መዳረሻዎን በማንኛውም ጊዜ ያድሱ: /vip"
+
+#: webhook/handlers.py:3392
+msgid "Bad Request: Invalid JSON"
+msgstr "መጥፎ ጥያቄ: ልክ ያልሆነ JSON"
+
+#: webhook/handlers.py:3399
+msgid "Bad Request: Missing tx_ref"
+msgstr "መጥፎ ጥያቄ: tx_ref ጠፍቷል"
+
+#: webhook/handlers.py:3408
+msgid "Internal Server Error"
+msgstr "የውስጥ ሰርቨር ስህተት"
+
+#: webhook/handlers.py:3468
 #, python-brace-format
 msgid ""
 "🎉 Congratulations! Your 💎{plan_name}💎 VIP subscription has been "
-"activated! It will expire on **{expiry_date_display}**."
-msgstr "🎉 እንኳን ደስ አላችሁ! የእርሶ 💎{plan_name}💎 የቪአይፒ ምዝገዎ አገልግሎት መስጠት ጀምረዋል! በ **{expiry_date_display}** ጊዜው ያበቃል."
+"activated! It will expire on **{expiry_date}**."
+msgstr ""
+"🎉 እንኳን ደስ አለዎት! የእርስዎ 💎{plan_name}💎 ቪአይፒ ምዝገባ ገብሯል! በ**{expiry_date}** ያበቃል።"
 
-#: webhook/handlers.py:3005
-msgid ""
-"❌ We received your payment, but there was an issue activating your VIP "
-"status. Please contact support immediately."
-msgstr "❌ ክፍያዎን ተቀብለናል፣ ነገር ግን የቪአይፒ ሁኔታዎን በማንቃት ላይ ችግር ተፈጥሯል። እባክዎ ወዲያውኑ ድጋፍን ያግኙ።"
+#: webhook/handlers.py:3507
+msgid "Webhook received, but internal DB/VIP update failed."
+msgstr "ዌብሁክ ተቀብሏል፣ ነገር ግን የውስጥ DB/VIP ዝመና አልተሳካም።"
 
-#: webhook/handlers.py:3035
-#, python-brace-format
-msgid ""
-"😔 Your Chapa payment for {plan_name} failed. Please try again or contact "
-"support if you believe this is an error."
-msgstr "😔 ለ{plan_name} የቻፓ ክፍያዎ አልተሳካም። እባክዎ እንደገና ይሞክሩ ወይም ይህ ስህተት ነው ብለው ካሰቡ ድጋፍን ያግኙ።"
+#: webhook/handlers.py:3536
+msgid "Internal Server Error: Network issue with Chapa API"
+msgstr "የውስጥ ሰርቨር ስህተት: ከቻፓ ኤፒአይ ጋር የአውታረ መረብ ችግር"
 
-#: webhook/handlers.py:3127
+#: webhook/handlers.py:3543
+msgid "Internal Server Error: Unexpected issue"
+msgstr "የውስጥ ሰርቨር ስህተት: ያልተጠበቀ ችግር"
+
+#: webhook/handlers.py:3547
+msgid "Webhook received and processed."
+msgstr "ዌብሁክ ተቀብሎ ተሰራ።"
+
+#: webhook/handlers.py:3573 webhook/handlers.py:3672
 msgid "Preparing your invoice..."
-msgstr "ደረሰኝዎን በማዘጋጀት ላይ..."
+msgstr "ደረሰኝዎ እየተዘጋጀ ነው..."
 
-#: webhook/handlers.py:3140
+#: webhook/handlers.py:3583 webhook/handlers.py:3682
 msgid "An error occurred: Invalid plan selected. Please try again."
-msgstr "ስህተት ተከስቷል፡ ልክ ያልሆነ እቅድ ተመርጧል። እባክዎ እንደገና  ይሞክሩ።"
+msgstr "ስህተት ተፈጥሯል: ልክ ያልሆነ እቅድ ተመርጧል። እባክዎ እንደገና ይሞክሩ።"
 
-#: webhook/handlers.py:3146 webhook/handlers.py:3267
+#: webhook/handlers.py:3588 webhook/handlers.py:3687 webhook/handlers.py:3766
 msgid "title_key"
-msgstr "title_key"
+msgstr "ርዕስ_ቁልፍ"
 
-#: webhook/handlers.py:3147
+#: webhook/handlers.py:3589 webhook/handlers.py:3688
 msgid "description_key"
-msgstr "description_key"
+msgstr "መግለጫ_ቁልፍ"
 
-#: webhook/handlers.py:3167
+#: webhook/handlers.py:3605 webhook/handlers.py:3705
 #, python-brace-format
 msgid "💫 Your invoice for **{title}** is ready!"
-msgstr "💫 ደረሰኝዎ ለ **{title}** ዝግጁ ነው!"
+msgstr "💫 ለ**{title}** የእርስዎ ደረሰኝ ዝግጁ ነው!"
 
-#: webhook/handlers.py:3196
+#: webhook/handlers.py:3631 webhook/handlers.py:3732
 msgid ""
 "Sorry, something went wrong while creating your invoice. Please try again"
 " later."
-msgstr "ይቅርታ፣ ደረሰኝዎን በመፍጠር ላይ ሳለ የሆነ ችግር ተፈጥሯል። እባክዎ ቆይተው እንደገና ይሞክሩ።"
+msgstr ""
+"ይቅርታ፣ ደረሰኝዎን በሚፈጥሩበት ጊዜ ስህተት ተፈጥሯል። እባክዎ ቆይተው እንደገና ይሞክሩ።"
 
-#: webhook/handlers.py:3262
+#: webhook/handlers.py:3762
 msgid "VIP"
-msgstr "VIP"
+msgstr "ቪአይፒ"
 
-#: webhook/handlers.py:3280
+#: webhook/handlers.py:3776
 #, python-brace-format
 msgid ""
 "🎉 Congratulations! Your 💎**{plan_name_display}**💎 VIP subscription has "
 "been activated! It will expire on **{expiry_date_for_display}**."
-msgstr "🎉 እንኳን ደስ አላችሁ! የእርሶ 💎**{plan_name_display}**💎 የቪአይፒ ምዝገዎ አገልግሎት መስጠት ጀምረዋል! በ **{expiry_date_for_display}**."
+msgstr ""
+"🎉 እንኳን ደስ አለዎት! የእርስዎ 💎**{plan_name_display}**💎 ቪአይፒ ምዝገባ ገብሯል! በ**{expiry_date_for_display}** ያበቃል።"
 
-#: webhook/handlers.py:3295
+#: webhook/handlers.py:3787
 msgid ""
 "Thank you for your payment, but there was an issue granting your VIP "
 "access. Please contact support."
-msgstr "ለክፍያዎ እናመሰግናለን፣ ግን የእርስዎን ቪአይፒ መዳረሻ የመስጠት ችግር ነበር። እባክዎ ድጋፍን ያግኙ።"
+msgstr ""
+"ለክፍያዎ እናመሰግናለን፣ ነገር ግን የቪአይፒ መዳረሻዎን በመስጠት ላይ ችግር ተፈጥሯል። እባክዎ ድጋፍን ያግኙ።"
 
-#: webhook/handlers.py:3307
+#: webhook/handlers.py:3798
 msgid "An unexpected error occurred. Please try again later or contact support."
-msgstr "ያልተጠበቀ ስህተት ተከስቷል። እባክዎ ቆይተው እንደገና ይሞክሩ ወይም ድጋፍን ያግኙ"
-
+msgstr "ያልተጠበቀ ስህተት ተፈጥሯል። እባክዎ ቆይተው እንደገና ይሞክሩ ወይም ድጋፍን ያግኙ።"

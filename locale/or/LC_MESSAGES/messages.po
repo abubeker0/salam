@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-07-13 09:13+0300\n"
-"PO-Revision-Date: 2025-07-13 09:15+0300\n"
+"POT-Creation-Date: 2025-07-17 15:14+0300\n"
+"PO-Revision-Date: 2025-07-17 15:25+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: or\n"
 "Language-Team: or <LL@li.org>\n"
@@ -18,623 +18,683 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: webhook/handlers.py:93 webhook/handlers.py:189 webhook/handlers.py:893
 msgid "📍 Share Location"
-msgstr "📍 Bakka Jirtu Qoodu"
+msgstr "📍 Bakka Bu'uura Kee Qooddu"
 
-#: webhook/handlers.py:122
-msgid "⚠️ Could not detect your city. Please try again later."
-msgstr "⚠️ Magaalaa kee arguu hin dandeenye. Itti-dabaluu yaali yeroo biraa."
-
-#: webhook/handlers.py:142
-msgid ""
-"❌ An internal database error occurred while saving your location. Please "
-"try again."
-msgstr "❌ Rakkoon sirna keessaa yeroo bakka kee ol kaa'uufi mudate. Mee irra deebi'ii yaali."
-
-#: webhook/handlers.py:164 webhook/handlers.py:471
-msgid "♂️ Male"
-msgstr "♂️ Dhiira"
-
-#: webhook/handlers.py:170 webhook/handlers.py:474
-msgid "♀️ Female"
-msgstr "♀️ Dubartii"
-
-#: webhook/handlers.py:176 webhook/handlers.py:477
-msgid "Any"
-msgstr "Kamiyyuu"
-
-#: webhook/handlers.py:245
 msgid ""
 "⚠️ Your profile is incomplete. Please finish the setup.\n"
 "\n"
 "Select your gender:"
-msgstr "⚠️ Odeeffannoon ke hin guutamne. Mee qindaa'ina fixi.\n\nSaala kee filadhu:"
+msgstr ""
+"⚠️ Piroofaayilii kee guutuu miti. Dhaabbii sirrii gochuu itti fufaa.\n"
+"\n"
+"Saala kee filadhu:"
 
-#: webhook/handlers.py:254 webhook/handlers.py:430
 msgid ""
 "📍 Would you like to share your location for better matches?\n"
 "\n"
 "This is optional, but helps us find people near you. If not, use /search "
 "command to find a match."
-msgstr "📍 Bakka jirtu qooduu barbaaddaa?\n\nKun dirqama miti, garuu nama si bira jiru akka argannu nu gargaara. Yoo hin barbaadne, ajaja /search fayyadami."
+msgstr ""
+"📍 Bakka bu'uura kee waliin qooduu barbaaddaa?\n"
+"\n"
+"Kun filannoo dha, garuu si wajjin wal-qunnamtiidhaaf namoota si dhaabbatan barbaaduuf nu gargaaru. Yoo hin ta'in, /search "
+" ajaja fayyadamuudhaan wal-argii barbaadi."
 
-#: webhook/handlers.py:262
 msgid "🎉 Welcome back! You're all set."
-msgstr "🎉 Baga deebite! Hunduu siif qophaa’e."
+msgstr "🎉 Baga dhufte! Hunda qopheessiteetta."
 
-#: webhook/handlers.py:276 webhook/handlers.py:330 webhook/handlers.py:928
-#: webhook/handlers.py:1428 webhook/handlers.py:1574 webhook/handlers.py:1722
-#: webhook/handlers.py:2420 webhook/handlers.py:2461
 msgid "❌ An unexpected error occurred. Please try again later."
-msgstr "❌ Dogoggorri hin eegamne tokko mudate. Itti-dabaluu yaali yeroo biraa."
+msgstr "❌ Dogoggora hin eegamne uumame. Itti aanuuf yaali."
 
-#: webhook/handlers.py:295
-msgid "❌ An internal error occurred. Please try again."
-msgstr "❌ Rakkoon keessaa tokko mudate. Mee irra deebi'ii yaali."
+msgid "⚠️ Could not detect your city. Please try again later."
+msgstr "⚠️ Magaalaa kee hin arganne. Itti aanuuf yaali."
 
-#: webhook/handlers.py:296
-msgid "❌ An internal error occurred. Please try again later."
-msgstr "❌ Rakkoon keessaa tokko mudate. Itti-dabaluu yaali yeroo biraa."
-
-#: webhook/handlers.py:307
-msgid "Language set successfully!"
-msgstr "Afaan milkaa'inaan filatameera!"
-
-#: webhook/handlers.py:311
-#, python-brace-format
-msgid "Language set to **{lang}**."
-msgstr "Afaan **{lang}** jedhamee filatameera."
-
-#: webhook/handlers.py:317
 msgid ""
-"👋 Welcome to the Anonymous Chat Bot! Let's get you set up.\n"
+"❌ An internal database error occurred while saving your location. Please "
+"try again."
+msgstr ""
+"❌ Rakkoo ol'aantummaa keessatti bakki kee ol-kaafamuu irratti uumame. Itti aanuuf yaali."
+
+msgid "✅ Location set to: {city}"
+msgstr "✅ Bakka bu'uura {city} irratti kaa'ame."
+
+msgid "👱‍♂️ Male"
+msgstr "👱‍♂️ Dhiirota"
+
+msgid "👩‍🦰 Female"
+msgstr "👩‍🦰 Dubartoota"
+
+msgid "Any"
+msgstr "Waliigala"
+
+msgid "Language set successfully!"
+msgstr "Afaan sirnaan kaa'ame!"
+
+msgid "Language set to <b>{lang}</b>."
+msgstr "Afaan gara <b>{lang}</b>tti kaa'ame."
+
+msgid ""
+"👋 Welcome to the Selam Chat Bot! Let's get you set up.\n"
 "\n"
 "By using this bot, you confirm you're 18+ and agree to our Terms and "
 "Conditions (/privacy).\n"
 "\n"
 "Please select your gender:"
-msgstr "👋 Baga Nagaan Dhuftan Botii Marii Maqaa Hin Agarsiifneetti! Amma si qopheessina.\n\nBot kana yoo fayyadamte, umrii kee waggaa 18 ol ta'uu fi seerota keenya (/privacy) waliin waliigaltee agarsiiftu.\n\nSaala kee filadhu:"
+msgstr ""
+"👋 Baga nagaan dhuftan gara Selam Chat Bot! Si qopheessuu jalqabuun haa eeyyamnu.\n"
+"\n"
+"Bot kana fayyadamuun, umuriin kee 18+ ta'uu fi Heerree fi Jijjiiramoota keenya (/privacy) waliin waliigaltee akka qabdu mirkaneessa.\n"
+"\n"
+"Saala kee filadhu:"
 
-#: webhook/handlers.py:329
+msgid ""
+"✅ Language updated successfully. You will only be matched with users who "
+"speak your language if possible."
+msgstr ""
+"✅ Afaan siif haaromsame! Yoo danda'ame, namoota afaan kee dubbatan qofa waliin walitti hidhama."
+
 msgid "❌ An unexpected error occurred. Please try again."
-msgstr "❌ Dogoggorri hin eegamne tokko mudate. Mee irra deebi’ii yaali."
+msgstr "❌ Dogoggora hin eegamne uumame. Itti aanuuf yaali."
 
-#: webhook/handlers.py:396 webhook/handlers.py:1458
+msgid "Please choose your preferred language:"
+msgstr "Afaan filatamee akka filattu dirqama."
+
+msgid "❌ An error occurred."
+msgstr "Dogoggora uumame."
+
+msgid "❌ Please try again later."
+msgstr "❌ Itti aanuuf yaali."
+
 msgid "✅ Gender updated!"
-msgstr "✅ Saala kee haaromsiteetta!"
+msgstr "✅ Saala sirnaan haaromsame!"
 
-#: webhook/handlers.py:398 webhook/handlers.py:1464 webhook/handlers.py:1769
 msgid "🔢 Please enter your age:"
-msgstr "🔢 Mee umrii kee galchi:"
+msgstr "🔢 Umuriin kee barreessi:"
 
-
-#: webhook/handlers.py:408 webhook/handlers.py:1472
 msgid ""
 "❌ An unexpected error occurred while saving your gender. Please try again"
 " later."
-msgstr "❌ Rakkoon hin eegamne yeroo saala kee ol kaa’uufi mudate. Itti-dabaluu yaali yeroo biraa."
+msgstr ""
+"❌ Dogoggora hin eegamne uumame yeroo saala kee ol-kaafamu. Itti aanuuf yaali."
 
-#: webhook/handlers.py:428
 msgid "✅ Your profile is complete!"
-msgstr "✅ Odeeffannoon kee guutamee jira!"
+msgstr "✅ Piroofaayilii kee guutame!"
 
-#: webhook/handlers.py:441
 msgid ""
 "❌ An unexpected error occurred while saving your age. Please try again "
 "later."
-msgstr "❌ Rakkoon hin eegamne yeroo umrii kee ol kaa’uufi mudate. Itti-dabaluu yaali yeroo biraa."
+msgstr ""
+"❌ Dogoggora hin eegamne uumame yeroo umurii kee ol-kaafamu. Itti aanuuf yaali."
 
-#: webhook/handlers.py:453
-msgid "🔄 Select your new gender:"
-msgstr "🔄 Saala haarawaa filadhu:"
+msgid "👱‍♂️ Select your new gender👩‍🦰:"
+msgstr "👱‍♂️ Saala haaraa kee filadhu👩‍🦰:"
 
-#: webhook/handlers.py:653
-msgid "Choose the gender you want to chat with:"
-msgstr "Saala waliin haasawu barbaaddu filadhu:"
+msgid "🙋🏻‍♂️ Male"
+msgstr "🙋🏻‍♂️ Dhiirota"
 
-#: webhook/handlers.py:669
+msgid "🙋🏻‍♀️ Female"
+msgstr "🙋🏻‍♀️ Dubartoota"
+
+msgid "🌐 Any"
+msgstr "🌐 Waliigala"
+
+msgid "💎Choose the gender you want to chat with:"
+msgstr "💎 Saala yeroo wal-qunnamtii barbaaddu filadhu:"
+
 msgid ""
 "⏳ You are already in the search queue. Please wait for your current "
-"search to complete, or you can /stop."
-msgstr "⏳ Amma dura teessoo barbaachisaa keessatti jirtu. Mee barbaacha dhumaatti eegii, yookaan /stop fayyadami."
+"search to complete or /stop."
+msgstr ""
+"⏳ Ammayyuu yeroo barbaacha keessa jirtu. Bakka barbaachaa kee guutuuf ykn /stop fayyadami."
 
-#: webhook/handlers.py:692
-msgid "Your partner has disconnected. Use /search to find a partner."
-msgstr "Hojii walqunnamtii waraan kee addaan cite. Walitti dhufeenya haaraa argachuuf /search fayyadami."
+msgid "😔Your partner has disconnected. Use /search to find a partner."
+msgstr "😔 Hiriyaa kee wal-qunnamtii dhaabee jira. Hiriyaa barbaaduuf /search fayyadami."
 
-#: webhook/handlers.py:696
+
+
 msgid "You were in a chat. Disconnected."
-msgstr "Waliin haasawaa turte. Walqunnamtiin addaan cite."
+msgstr "Waliin mari'achuu turteetta. Wal-qunnamtii dhaabee jira."
 
-#: webhook/handlers.py:708
 msgid "⚠️ Could not retrieve your user info. Please try again."
-msgstr "⚠️ Odeeffannoo fayyadamaa kee arguu hin dandeenye. Mee irra deebi’ii yaali."
+msgstr "⚠️ Odeeffannoo fayyadamtu hin argamne. Itti aanuuf yaali."
 
-#: webhook/handlers.py:718
 msgid "⚠️ Please set your gender first using /setgender."
-msgstr "⚠️ Mee jalqaba saala kee /setgender fayyadamuun murteessi."
+msgstr "⚠️ Saala kee dura /setgender fayyadamuun kaa'ii."
 
-#: webhook/handlers.py:726
 msgid ""
 "💎 Gender-based matching is a VIP-only feature.\n"
 "Become a /vip member"
-msgstr "💎 Walitti-makuu saala irratti hundaa’e sadarkaa VIP qofatu fayyadama.\n/vip miseensa ta’i."
+msgstr ""
+"💎 Walitti hidhamiinsa saala irratti hundaa'uu, kennaa VIP qofaaf kennamee dha.\n"
+"Qaama /vip ta'ii"
 
-#: webhook/handlers.py:738 webhook/handlers.py:968
 msgid "🔍 Searching for a partner..."
-msgstr "🔍 Hirmaataa barbaadaa jira..."
+msgstr "🔍 Hiriyaa barbaaduu..."
 
-#: webhook/handlers.py:781
 msgid ""
 "💎 You found another VIP partner! Start chatting!\n"
 "\n"
 "/next — find a new partner\n"
 "/stop — stop this chat"
-msgstr "💎 Hirmaataa VIP biraa argatteetta! Haasawa eegali!\n\n/next — hirmaataa haaraa argadhu\n/stop — haasawa kana dhaabi"
+msgstr ""
+"💎 Hiriyaa VIP biraa argatteetta! Mari'achuu jalqabi!\n"
+"\n"
+"/next — hiriyaa haaraa barbaadi\n"
+"/stop — wal-qunnamtii kana dhaabi"
 
-#: webhook/handlers.py:786 webhook/handlers.py:1402 webhook/handlers.py:1408
 msgid ""
-"✅ Partner found! Start chatting!\n"
+"☺️ Partner found! Start chatting!\n"
 "\n"
 "/next — find a new partner\n"
 "/stop — stop this chat"
-msgstr "✅ Hirmaataa argatteetta! Haasawa eegali!\n\n/next — hirmaataa haaraa argadhu\n/stop — haasawa kana dhaabi"
+msgstr ""
+"☺️ Hiriyaa argatteetta! Mari'achuu jalqabi!\n"
+"\n"
+"/next — hiriyaa haaraa barbaadi\n"
+"/stop — wal-qunnamtii kana dhaabi"
 
-#: webhook/handlers.py:793 webhook/handlers.py:1398
 msgid ""
 "💎 VIP partner found! Start chatting!\n"
 "\n"
 "/next — find a new partner\n"
 "/stop — stop this chat"
-msgstr "💎 Hirmaataa VIP argatteetta! Haasawa eegali!\n\n/next — hirmaataa haaraa argadhu\n/stop — haasawa kana dhaabi"
+msgstr ""
+"💎 Hiriyaa VIP argatteetta! Mari'achuu jalqabi!\n"
+"\n"
+"/next — hiriyaa haaraa barbaadi\n"
+"/stop — wal-qunnamtii kana dhaabi"
 
-#: webhook/handlers.py:802 webhook/handlers.py:1036
-msgid "😔 No partners found at the moment. Please try again later."
-msgstr "😔 Ammaaf hirmaataan hin argamne. Itti-dabaluu yaali yeroo biraa."
-
-#: webhook/handlers.py:812
 msgid "❌ An unexpected error occurred during search. Please try again later."
-msgstr "❌ Dogoggorri hin eegamne yeroo barbaachaa keessa jiru mudate. Itti-dabaluu yaali yeroo biraa."
+msgstr "❌ Dogoggora hin eegamne uumame yeroo barbaacha. Itti aanuuf yaali."
 
-#: webhook/handlers.py:901
+msgid "🏙️ Search by City"
+msgstr "🏙️ Magaalaa irratti barbaadi"
+
+msgid "🙋🏻‍♂️ Search by Gender🙋🏻‍♀️"
+msgstr "🙋🏻‍♂️ Saala irratti barbaadi🙋🏻‍♀️"
+
 msgid "Please share your live location:"
-msgstr "Mee bakka jirtu yeroo dhugaa qoodi:"
+msgstr "Bakka bu'ura kee yeroo ammaa qoodi:"
 
-#: webhook/handlers.py:949
 msgid ""
 "⏳ You are already in the search queue. Please wait for your current "
 "search to complete, or you can /stop"
-msgstr "⏳ Amma dura teessoo barbaacha keessa jirtu. Mee dhumaatti eegii, yookaan /stop fayyadami."
+msgstr ""
+"⏳ Amma yeroo barbaacha keessa jirtu. Bakka barbaachaa kee guutuuf ykn /stop fayyadami"
 
-#: webhook/handlers.py:957
 msgid ""
 "🤔 You are already in a dialog right now.\n"
 "/next — find a new partner\n"
 "/stop — stop this dialog"
-msgstr "🤔 Amma keessa marii keessa jirtu.\n/next — hirmaataa haaraa argadhu\n/stop — marii kana dhaabi"
+msgstr ""
+"🤔 Amma waliin mari'achuuf jirta.\n"
+"/next — hiriyaa haaraa barbaadi\n"
+"/stop — wal-qunnamtii kana dhaabi"
 
-#: webhook/handlers.py:1015
 msgid ""
 "💎 You found another VIP partner! Start chatting!\n"
 "\n"
 "/next — new partner\n"
 "/stop — end chat"
-msgstr "💎 Hirmaataa VIP biraa argatteetta! Haasawa eegali!\n\n/next — hirmaataa haaraa\n/stop — haasawa dhaabi"
+msgstr ""
+"💎 Hiriyaa VIP biraa argatteetta! Mari'achuu jalqabi!\n"
+"\n"
+"/next — hiriyaa haaraa barbaadi\n"
+"/stop — wal-qunnamtii dhumaa"
 
-#: webhook/handlers.py:1020
 msgid ""
-"✅ Partner found! Start chatting!\n"
+"☺️ Partner found! Start chatting!\n"
 "\n"
 "/next — new partner\n"
 "/stop — end chat"
-msgstr "✅ Hirmaataa argatteetta! Haasawa eegali!\n\n/next — hirmaataa haaraa\n/stop — haasawa dhaabi"
+msgstr ""
+"☺️ Hiriyaa argatteetta! Mari'achuu jalqabi!\n"
+"\n"
+"/next — hiriyaa haaraa barbaadi\n"
+"/stop — wal-qunnamtii dhumaa"
 
-#: webhook/handlers.py:1027
 msgid ""
 "💎 VIP partner found! Start chatting!\n"
 "\n"
 "/next — new partner\n"
 "/stop — end chat"
-msgstr "💎 Hirmaataa VIP argatteetta! Haasawa eegali!\n\n/next — hirmaataa haaraa\n/stop — haasawa dhaabi"
+msgstr ""
+"💎 Hiriyaa VIP argatteetta! Mari'achuu jalqabi!\n"
+"\n"
+"/next — hiriyaa haaraa barbaadi\n"
+"/stop — wal-qunnamtii dhumaa"
 
-#: webhook/handlers.py:1048
-msgid "You are not in an active chat. /search to find a partner."
-msgstr "Haasawa keessa hin jirtu. /search fayyadami hirmaataa barbaaduuf."
+msgid "😔 Your partner has stopped the chat. /search to find a new partner"
+msgstr "😔 Hiriyaa kee wal-qunnamtii dhaabee jira. /search fayyadami hiriyaa haaraa barbaadi"
 
-#: webhook/handlers.py:1082
-msgid "✅ Your partner has stopped the chat. /search to find a new partner"
-msgstr "✅ Hirmaataan kee haasawa dhaabeera. Hirmaataa haaraa barbaaduuf /search fayyadami"
-
-#: webhook/handlers.py:1090
-msgid "✅ Chat stopped. /search to find a new partner"
-msgstr "✅ Haasawa dhaabbate. Hirmaataa haaraa barbaaduuf /search fayyadami"
-
-
-#: webhook/handlers.py:1099 webhook/handlers.py:1103 webhook/handlers.py:1540
-#: webhook/handlers.py:1547
 msgid "How was your experience with your last partner?"
-msgstr "Waliin taphataa dhumaati waliin turte akkam ture?"
+msgstr "Hiriyaa kee dhumaa waliin wal-qunnamtiikee akkam ta'ee?"
 
-#: webhook/handlers.py:1114
+msgid "✅ Chat stopped. /search to find a new partner"
+msgstr "✅ Wal-qunnamtii dhaabame. /search fayyadami hiriyaa haaraa barbaadi"
+
 msgid "There was an issue stopping the chat."
-msgstr "Haasawa dhaabuuf rakkoon tokko mudateera."
+msgstr "Rakkoo wal-qunnamtii dhaabuuf uumame."
 
-#: webhook/handlers.py:1125
-msgid "🔄 Change Gender"
-msgstr "🔄 Saala jijjiiri"
+msgid "✅ Your search has been stopped. /search to start again."
+msgstr "✅ Barbaachaan kee dhaabame. /search fayyadami haaromsi"
 
-#: webhook/handlers.py:1129
+msgid "🤔 You are not in an active chat or searching. /search to find a partner."
+msgstr "🤔 Amma wal-qunnamtii irratti hin jirre ykn barbaachaa miti. /search fayyadami hiriyaa barbaadi."
+
+msgid "👱‍♂️Change Gender👩‍🦰"
+msgstr "👱‍♂️ Saala Jijjiiruu👩‍🦰"
+
 msgid "📍 Set Location"
-msgstr "📍 Bakka jiru kaa’i"
+msgstr "📍 Bakka bu'uura kaa'uu"
 
-#: webhook/handlers.py:1133
 msgid "🎂 Set Age"
-msgstr "🎂 Umrii kaa’i"
+msgstr "🎂 Umurii kaa'uu"
 
-#: webhook/handlers.py:1138
+msgid "🌐 Set Language"
+msgstr "🌐 Afaan kaa'uu"
+
 msgid "⚙️ Choose what you want to update:"
-msgstr "⚙️ Wantoota haaromsu barbaaddu filadhu:"
+msgstr "⚙️ Maal haaromsuu barbaadda filadhu:"
 
-#: webhook/handlers.py:1234
-#, python-brace-format
 msgid ""
-"💰 You earned 10 credits!\n"
+"❌ An unexpected error occurred while loading settings. Please try again "
+"later."
+msgstr ""
+"❌ Dogoggora hin eegamne uumame yeroo settings kaa'amuu. Itti aanuuf yaali."
+
+msgid ""
+"💰 You earned 20 credits!\n"
 "Your total credits: {new_credits}"
-msgstr "💰 Kireeditii 10 argatteetta!\nWaliigala kireeditii kee: {new_credits}"
+msgstr ""
+"💰 Kireeditii 20 argatteetta!\n"
+"Kireeditii guutuu kee: {new_credits}"
 
-#: webhook/handlers.py:1246
 msgid "❌ An error occurred while adding credits. Please try again later."
-msgstr "❌ Kireeditii dabaluuf yaaluun dogoggora mudate. Itti deebi’i yeroo biraa."
+msgstr "❌ Rakkoo kireeditii dabaluuf uumame. Itti aanuuf yaali."
 
-#: webhook/handlers.py:1267
 msgid ""
 "Please wait for your previous search request to finish, or /stop to "
 "cancel."
-msgstr "Mee barbaacha darbe dhumu eegii, yookaan /stop tuqii haquuf."
+msgstr ""
+"Barbaachaa kee duraa xumurri itti aanuuf eeggadhu, ykn /stop fayyadami"
 
-#: webhook/handlers.py:1293
 msgid ""
 "You have reached your daily search limit or have no credits. Use /credit "
 "to get more searches."
-msgstr "Daangaa barbaachaa guyyaa kee gaheerta yookaan kireeditii hin qabdu. /credit fayyadami barbaacha dabalataa argachuuf."
+msgstr ""
+"Daangaa barbaachaa guyyaa kee ga'ee jira, ykn kireeditii hin qabdu. /credit fayyadami dabalata barbaachaa argachuuf."
 
-#: webhook/handlers.py:1321
 msgid "Your partner has disconnected to /search for someone new."
-msgstr "Hirmaataan kee addaan cite jira, nama haaraa barbaaduuf /search fayyadeera."
+msgstr "Hiriyaa kee wal-qunnamtii dhaabee jira /search fayyadami hiriyaa haaraa barbaadi."
 
-#: webhook/handlers.py:1327
 msgid ""
 "You have been disconnected from your previous chat. Searching for a new "
 "partner."
-msgstr "Haasawa darbe irraa addaan citeetta. Hirmaataa haaraa barbaadaa jirta."
+msgstr ""
+"Hiriyaa kee duraa irraa wal-qunnamtii dhaabee jira. Hiriyaa haaraa barbaaduuf jiru."
 
-#: webhook/handlers.py:1346
-msgid "🔍Searching for a partner..."
-msgstr "🔍Hirmaataa barbaadaa jira..."
+msgid "An internal error occurred. Please try again later."
+msgstr "Rakkoo keessaatiin uumame. Itti aanuuf yaali."
 
-#: webhook/handlers.py:1417
-msgid "😔 No users are currently available for chat. Removed from search queue."
-msgstr "😔 Ammaaf namoonni haasawuuf hin jirani. Teessoo barbaachaa irraa haquu dandeenye."
-
-#: webhook/handlers.py:1502
-#, python-brace-format
 msgid "🚫 You are banned until {banned_time}."
-msgstr "🚫 Yeroo {banned_time} tti hanga ga’utti dhorkamteetta."
+msgstr "🚫 Adabaadhaan hin eeyyamamne hanga {banned_time}."
 
-#: webhook/handlers.py:1536
 msgid "Your partner ended the chat. /search to find a new partner"
-msgstr "Hirmaataan kee haasawa dhaabe. Hirmaataa haaraa barbaaduuf /search fayyadami"
+msgstr "Hiriyaa kee wal-qunnamtii dhaabe. /search fayyadami hiriyaa haaraa barbaadi."
 
-#: webhook/handlers.py:1551
 msgid "You're not currently in a chat."
-msgstr "Amma haasawa keessa hin jirtu."
+msgstr "Amma wal-qunnamtii keessa hin jirre."
 
-#: webhook/handlers.py:1689
+msgid ""
+"❌ An unexpected error occurred while retrieving the privacy policy. "
+"Please try again later."
+msgstr ""
+"❌ Dogoggora hin eegamne uumame yeroo seera eegumsa odeeffannoo argachuuf. Itti aanuuf yaali."
+
 msgid ""
 "🎉 You already have 💎 **VIP access**!\n"
 "Enjoy all premium features."
-msgstr "🎉 💎 **VIP seensa** duraan dursitee qabda!\nAmala addaa hunda fayyadami."
+msgstr ""
+"🎉 Ati duraan 💎 **Fayyadamummaa VIP** qabda!\n"
+"Fayidaalee dorgomaa hunda gammadaa."
 
-#: webhook/handlers.py:1702
 msgid ""
 "<b>💎 Become a VIP User</b>\n"
-"Support the chat and unlock premium features instantly.\n"
+"\n"
+"<b>🧭 Search in Your Own City</b> – Meet people nearby and spark local "
+"connections.\n"
+"<b>🚻 Gender-Based Searching</b> – Choose who you chat with.\n"
+"<b>⏳ Unlimited Searches</b> – No limits, keep exploring as much as you "
+"want.\n"
+"<b>🚫 Ad-Free Experience</b> – Enjoy chatting without any interruptions.\n"
+"<b>💎 Visible VIP Status</b> – Stand out with a special badge.\n"
+"<b>🤍 Support the Bot</b> – Help us grow and keep the service running.\n"
+"👨🏻‍💻 If you have any questions, do not hesitate to get in touch "
+"@YourBotSupport\n"
 "\n"
 "<b>Choose your preferred payment method:</b>"
-msgstr "<b>💎 Fayyadamaa VIP ta’i</b>\nHaasawa deeggaruufi amala gatii ol’aanaa banadhu.\n\n<b>Maloota kaffaltii filadhu:</b>"
+msgstr ""
+"<b>💎 Fayyadamaa VIP ta'i</b>\n"
+"\n"
+"<b>🧭 Magaala Kee keessatti barbaadi</b> – Namoota naannoo kee jiran waliin "
+"waliin qunnamtii uumi.\n"
+"<b>🚻 Saala irratti barbaadi</b> – Namoota waliin mari'achuu barbaaddu filadhu.\n"
+"<b>⏳ Barbaachaa Bilisaan</b> – Daangaa hin qabu, akkasumas akka barbaaddu "
+"barbaadi.\n"
+"<b>🚫 Ijaarsa Hidhata Oduu Hin Qabne</b> – Mari'achuuf to'annoo hin qabu.\n"
+"<b>💎 Haala VIP ifa ta'e</b> – Mallattoo addaa qabduun ilaalama.\n"
+"<b>🤍 Hojii Bo'oo Deeggaraa</b> – Gargaari nu guddifnuuf tajaajila itti fufsiisuuf.\n"
+"👨🏻‍💻 Gaaffii yoo qabaatte, @YourBotSupport waliin qunnamuuf hin beeksisuu.\n"
+"\n"
+"<b>Akkaataa kaffaltii filadhu:</b>"
 
-#: webhook/handlers.py:1708
 msgid "🧾 Telegram Payments"
-msgstr "🧾 Telegram Payments"
+msgstr "🧾 Kaffaltii Telegram"
 
-#: webhook/handlers.py:1712
 msgid "💳 Chapa Payments"
-msgstr "💳 Chapa Payments"
+msgstr "💳 Kaffaltii Chapa"
 
-#: webhook/handlers.py:1734
-#, python-brace-format
 msgid "Your User ID is: `{user_id}`"
-msgstr "Teessoon Fayyadamaa Kee: `{user_id}`"
+msgstr "ID Fayyadamtuu Kee: `{user_id}`"
 
-#: webhook/handlers.py:1788
-#, python-brace-format
+msgid ""
+"❌ An unexpected error occurred while retrieving your User ID. Please try "
+"again later."
+msgstr ""
+"❌ Rakkoo hin eegamne uumame yeroo ID Fayyadamtuu kee argachuuf. Itti aanuuf yaali."
+
 msgid "✅ Your age has been set to: **{age}**"
-msgstr "✅ Umrii kee akka **{age}** tti kaa’ameera"
+msgstr "✅ Umurii kee: **{age}** kaa'amee jira."
 
-#: webhook/handlers.py:1797
 msgid "❌ An error occurred while saving your age. Please try again later."
-msgstr "❌ Dogoggorri umrii kee ol kaa'uuf yaaluun mudate. Itti deebi'i yeroo biraa."
+msgstr "❌ Rakkoo uumame yeroo umurii kee olkaa'uuf. Itti aanuuf yaali."
 
-#: webhook/handlers.py:1805
 msgid "❌ Please enter a valid age between 10 and 100."
-msgstr "❌ Mee umrii sirrii ta’e gidduu 10 fi 100 galchi."
+msgstr "❌ Umurii sirrii gara 10 fi 100 gidduutti galchii."
 
-#: webhook/handlers.py:1810
 msgid "❌ Please enter a valid numeric age."
-msgstr "❌ Mee lakkoofsa sirrii ta’e umrii agarsiisu galchi."
+msgstr "❌ Umurii lakkoofsa sirrii galchii."
 
-#: webhook/handlers.py:1831
-msgid "An internal error occurred. Please try again later."
-msgstr "Dogoggorri keessaa tokko mudate. Itti deebi’i yeroo biraa."
-
-#: webhook/handlers.py:1846
 msgid ""
 "💎 City-based matching is a **VIP-only feature**.\n"
 "Become a /vip member to unlock it!"
-msgstr "💎 Waliin walitti fiduun magaalaa tokko keessaa **ammaaf VIP qofaa**.\n/vip ta’i banuuf!"
+msgstr ""
+"💎 Walitti hidhamiinsa magaalaa irratti hundaa'uu **VIP qofaaf kennamee dha**.\n"
+"Qaama /vip ta'i akka fayyadamuu danda'uuf!"
 
-#: webhook/handlers.py:1855
 msgid "📍 Please share your location first using the /setlocation command."
-msgstr "📍 Mee dura iddoo ati jirtu /setlocation fayyadamuun qooduu."
+msgstr "📍 Bakka kee dura /setlocation ajaja fayyadami."
 
-#: webhook/handlers.py:1862
 msgid "⚠️ You're already in a chat. Use /stop to end it first before searching."
-msgstr "⚠️ Amma haasawa keessa jirtu. Dura /stop fayyadami haasawa dhaabuuf."
+msgstr "⚠️ Amma wal-qunnamtii keessa jirta. /stop fayyadamuun dura dhaabi."
 
-#: webhook/handlers.py:1870
 msgid "⏳ You're already searching. Please wait or use /stop to cancel."
-msgstr "⏳ Amma barbaadaa jirta. Mee eegii yookaan /stop fayyadami haqii."
+msgstr "⏳ Amma barbaachaa jirta. Eegadhu ykn /stop fayyadami."
 
-#: webhook/handlers.py:1883
 msgid "🔍 Searching for a partner in your city..."
-msgstr "🔍 Hirmaataa magaalaa keeti keessa jiru barbaadaa jirta..."
+msgstr "🔍 Magaala kee keessatti hiriyaa barbaaduu..."
 
-#: webhook/handlers.py:1935 webhook/handlers.py:1942
 msgid ""
 "💎 **VIP City Match Found!** You're now chatting with another **VIP** "
 "member in your city.\n"
 "\n"
-"/next — find a new partner\n"
-"/stop — end chat"
-msgstr "💎 **Waliin walitti dhufeenya magaalaa keessaa VIP argameera!** Amma miseensa **VIP** biroo waliin magaalaa kee keessa haasawaa jirta.\n\n/next — nama biraa barbaadi\n/stop — haasawa dhaabi"
+msgstr ""
+"💎 **VIP Magaala Walitti Hidhamiinsa Argame!** Amma hiriyaa **VIP** "
+"biroo waliin magaala kee keessatti mari'achaa jirta.\n"
+"\n"
 
-#: webhook/handlers.py:1937 webhook/handlers.py:1944
 msgid ""
 "🏙️ **City Match Found!** You're now chatting with someone in your city.\n"
 "\n"
-"/next — find a new partner\n"
-"/stop — end chat"
-msgstr "🏙️ **Nama magaalaa kee keessa jiru argatte!** Amma nama magaalaa kee keessa jiru waliin haasawaa jirta.\n\n/next — nama biraa barbaadi\n/stop — haasawa dhaabi"
+msgstr ""
+"🏙️ **Magaala Walitti Hidhamiinsa Argame!** Amma namoota magaala kee keessatti "
+"marichaa jirta.\n"
+"\n"
 
-#: webhook/handlers.py:1956
 msgid ""
 "😔 No active users are available in your city right now. You'll stay in "
 "the search queue and be matched as soon as someone nearby becomes "
 "available."
-msgstr "😔 Ammaaf namni magaalaa kee keessa jiru hin jiruu. Garuu teessoo barbaachaa keessa ni tura, nama dhihoo yeroo argamu si waliin walitti fiduuf."
+msgstr ""
+"😔 Amma namoonni fayyadamoo jiranii magaala kee keessatti hin jirani. "
+"Barbaachaa keessa turuuf, namoonni naannoo jiran yoo argaman hidhamiinsa "
+"argachuuf gara fuulduraatti jijjiiramu."
 
-#: webhook/handlers.py:1966
 msgid ""
 "❌ An unexpected error occurred while searching for a city partner. Please"
 " try again later."
-msgstr "❌ Dogoggorri hin eegamne tokko yeroo nama magaalaa keessaa barbaadu mudate. Itti deebi'i yeroo biraa."
+msgstr ""
+"❌ Rakkoo hin eegamne uumame yeroo hiriyaa magaalaa barbaaduuf. Itti aanuuf "
+"yaali."
 
-#: webhook/handlers.py:1978
 msgid ""
 "🤖 You're not in a chat right now.\n"
 "\n"
 "Tap /Search to start chatting."
-msgstr "🤖 Amma haasawa keessa hin jirtu.\n\n/chat jalqabuuf /search tuqi."
+msgstr ""
+"🤖 Amma wal-qunnamtii keessa hin jirre.\n"
+"\n"
+"Tap /Search fayyadamuun mari'achuu jalqabi."
 
-#: webhook/handlers.py:2225
-msgid "👍 Good"
-msgstr "👍 Gaariidha"
+msgid "👍"
+msgstr "👍"
 
-#: webhook/handlers.py:2231
-msgid "👎 Bad"
-msgstr "👎 Hamaa"
+msgid "👎"
+msgstr "👎"
 
-#: webhook/handlers.py:2237
 msgid "⚠️ Report"
-msgstr "⚠️ Himu"
+msgstr "⚠️ Gabaasaa"
 
-#: webhook/handlers.py:2247 webhook/handlers.py:2267
 msgid "Your feedback has been submitted successfully."
-msgstr "Yaada keetiin milkaa’inaan ergameera."
+msgstr "Gabaasni kee galmaa'ee milkaa'ee jira."
 
-#: webhook/handlers.py:2285
+msgid ""
+"❌ An unexpected error occurred while submitting your feedback. Please try"
+" again later."
+msgstr ""
+"❌ Rakkoo hin eegamne uumame yeroo gabaasa kee erguuf. Itti aanuuf "
+"yaali."
+
 msgid "📢 Advertising"
-msgstr "📢 Beeksisaa"
+msgstr "📢 Beeksisa"
 
-#: webhook/handlers.py:2291
 msgid "💰 Selling"
 msgstr "💰 Gurgurtaa"
 
-#: webhook/handlers.py:2297
 msgid "🔞 Child Pornography"
-msgstr "🔞 Foddaa daa’imman ilaalchisee"
+msgstr "🔞 Poornogiraafii Ilmaanii"
 
-#: webhook/handlers.py:2303
 msgid "🤲 Begging"
 msgstr "🤲 Kadhannaa"
 
-#: webhook/handlers.py:2309
 msgid "😡 Insult"
-msgstr "😡 Arrabsuu"
+msgstr "😡 Of-eeggannoo"
 
-#: webhook/handlers.py:2315
 msgid "🪓 Violence"
-msgstr "🪓 Jeequmsa"
+msgstr "🪓 Jibbii"
 
-#: webhook/handlers.py:2321
 msgid "🌍 Racism"
-msgstr "🌍 Amala sanyii addaan baasu"
+msgstr "🌍 Racism"
 
-#: webhook/handlers.py:2327
 msgid "🤬 Vulgar Partner"
-msgstr "🤬 Hirmaataa jechoota fokkataa jedhu"
+msgstr "🤬 Hiriyaa Hama"
 
-#: webhook/handlers.py:2333
 msgid "🔙 Back"
-msgstr "🔙 Deebi’i"
+msgstr "🔙 Gara duraatti"
 
-#: webhook/handlers.py:2344
 msgid "⚠️ Please select a reason to report your partner:"
-msgstr "⚠️ Mee hirmaataa kee himuuf sababaa filadhu:"
+msgstr "⚠️ Maaliif hiriyaa kee gabaasuu barbaaddaa filadhu:"
 
-#: webhook/handlers.py:2375
+msgid ""
+"❌ An unexpected error occurred while showing report options. Please try "
+"again later."
+msgstr ""
+"❌ Rakkoo hin eegamne uumame yeroo filannoo gabaasa agarsiisuu. Itti aanuuf "
+"yaali."
+
 msgid "✅ Your report has been submitted. Thank you!"
-msgstr "✅ Himannaa kee ergameera. Galatoomi!"
+msgstr "✅ Gabaasni kee galmaa'ee jira. Galatoomi!"
 
-#: webhook/handlers.py:2390
+msgid ""
+"❌ An unexpected error occurred while submitting your report. Please try "
+"again later."
+msgstr ""
+"❌ Rakkoo hin eegamne uumame yeroo gabaasa kee erguuf. Itti aanuuf yaali."
+
 msgid "100 ⭐ / $1.99 a week"
-msgstr "⭐ 100 / $1.99 torbee tokkoof"
+msgstr "100 ⭐ / $1.99 torbanitti"
 
-#: webhook/handlers.py:2394
 msgid "250 ⭐ / $3.99 a month"
-msgstr "⭐ 250 / $3.99 ji’a tokkoof"
+msgstr "250 ⭐ / $3.99 ji'aatti"
 
-#: webhook/handlers.py:2398
+
 msgid "1000 ⭐ / $19.99 a year"
-msgstr "⭐ 1000 / $19.99 waggaa tokkoof"
+msgstr "1000 ⭐ / $19.99 waggaa tokkoo"
 
-#: webhook/handlers.py:2413
 msgid "💫 Choose your plan with Telegram Stars:"
-msgstr "💫 Karoora kee Telegram Stars waliin filadhu:"
+msgstr "💫 Tartiiba kee Telegram Stars waliin filadhu:"
 
-#: webhook/handlers.py:2431
 msgid "1 Month - 400 ETB"
-msgstr "Ji’a 1 - 400 ETB"
+msgstr "Ji'a 1 - 400 ETB"
 
-#: webhook/handlers.py:2435
 msgid "6 Months - 1500 ETB"
-msgstr "Ji’a 6 - 1500 ETB"
+msgstr "Ji'oota 6 - 1500 ETB"
 
-#: webhook/handlers.py:2439
 msgid "1 Year - 2500 ETB"
 msgstr "Waggaa 1 - 2500 ETB"
 
-#: webhook/handlers.py:2454
 msgid "Choose your Chapa plan:"
-msgstr "Karoora Chapa kee filadhu:"
+msgstr "Tartiiba Chapa kee filadhu:"
 
-#: webhook/handlers.py:2489
 msgid "Invalid plan selected."
-msgstr "Karoora sirrii hin taane filatte."
+msgstr "Tartiiba sirrii hin filatamne."
 
-#: webhook/handlers.py:2497
 msgid "Preparing Chapa payment..."
-msgstr "Kaffaltii Chapa qopheessaa jirra..."
+msgstr "Kaffaltii Chapa qopheessuu..."
 
-#: webhook/handlers.py:2514
 msgid "VIP Subscription"
 msgstr "Galmee VIP"
 
-#: webhook/handlers.py:2515
 msgid "Unlock VIP features in the bot"
-msgstr "Amaloota VIP keessatti banadhu"
+msgstr "Fayyadama VIP botiin banuu"
 
-#: webhook/handlers.py:2528
 msgid "❌ Chapa's response was unreadable. Please try again later."
-msgstr "❌ Deebii Chapa dubbisuu hin dandeenye. Itti deebi’i yeroo biraa."
+msgstr "❌ Deebiin Chapa akka hin mul'anne. Itti aanuuf yaali."
 
-#: webhook/handlers.py:2559
 msgid "⚠ Payment prepared, but failed to save record. Please contact support."
-msgstr "⚠ Kaffaltiin qophaa’eera, garuu galmee olkaa’uu dadhabe. Deeggarsa qunnami."
+msgstr "⚠ Kaffaltiin qophaa'e, garuu galmee hin kuufamne. Deeggarsa qunnamuuf."
 
-#: webhook/handlers.py:2568
 msgid "✅ Pay with Chapa"
-msgstr "✅ Chapa waliin kaffali"
+msgstr "✅ Chapa waliin kaffalii"
 
-
-#: webhook/handlers.py:2570
 msgid "💳 Click below to complete your payment securely:"
-msgstr "💳 Kaffaltii kee nageenyaan xumuruuf gadii tuqi:"
+msgstr "💳 Fayyadami tuqaalee gadiitti kaffaltii kee guutuu."
 
-#: webhook/handlers.py:2579
 msgid "❌ Failed to create payment. Please try again later."
-msgstr "❌ Kaffaltii uumuun hin milkoofne. Itti deebi’i yeroo biraa."
+msgstr "❌ Kaffaltii uumuu hin dandeenye. Itti aanuuf yaali."
 
-#: webhook/handlers.py:2585
-msgid "❌ Network error during payment initiation. Please check your connection and try again."
-msgstr "❌ Yeroo kaffaltiin jalqabamu rakkoon marsariitii mudate. Walqunnamtii kee mirkaneessi itti deebi'i."
+msgid ""
+"❌ Network error during payment initiation. Please check your connection "
+"and try again."
+msgstr ""
+"❌ Rakkoo network yeroo kaffaltii jalqabu. Walqunnamtii kee ilaali fi itti aanuuf yaali."
 
-#: webhook/handlers.py:2590
-msgid "❌ An unexpected error occurred while processing your payment. Please try again later."
-msgstr "❌ Yeroo kaffaltiin hojjatamaa jiru dogoggorri hin eegamne tokko mudate. Itti deebi’i yeroo biraa."
+msgid ""
+"❌ An unexpected error occurred while processing your payment. Please try "
+"again later."
+msgstr ""
+"❌ Rakkoo hin eegamne uumame yeroo kaffaltii sirreessuuf. Itti aanuuf yaali."
 
-#: webhook/handlers.py:2797
-#, python-brace-format
-msgid "⏰ Your VIP subscription will expire in less than {hours} hours ({expiry_date})!\n\nDon't lose access to exclusive features like city-based matching. Renew your VIP status now: /vip"
-msgstr "⏰ Galmeen VIP kee sa’aatii {hours} keessatti ni xumurama ({expiry_date})!\n\nAmaloota adda addaa akka waliin walitti fidu magaalaa keessaa hin dhaban. Amma haaraa ta’i: /vip"
+msgid ""
+"⏰ Your VIP subscription will expire in less than {hours} hours "
+"({expiry_date})!\n"
+"\n"
+"Don't lose access to exclusive features like city-based matching. Renew "
+"your VIP status now: /vip"
+msgstr ""
+"⏰ Galmeen VIP kee sa'aa {hours} keessatti ni xumurama "
+"({expiry_date})!\n"
+"\n"
+"Fayyadama addaa akka walitti hidhamiinsa magaalaa hin dhabu. Haala VIP kee amma deebi'aa: /vip"
 
-#: webhook/handlers.py:2855
-msgid "😔 Your VIP subscription has expired. You no longer have access to exclusive features.\n\nRenew your VIP access anytime to unlock all premium benefits: /vip"
-msgstr "😔 Galmeen VIP kee xumurameera. Amaloota addaa ammas hin argattu.\n\nYeroo kamuu VIP haaraa taasifachuudhaan bu’aa dabalataa hunda banadhu: /vip"
+msgid ""
+"😔 Your VIP subscription has expired. You no longer have access to "
+"exclusive features.\n"
+"\n"
+"Renew your VIP access anytime to unlock all premium benefits: /vip"
+msgstr ""
+"😔 Galmeen VIP kee xumurame. Fayyadama addaa hin qabdu.\n"
+"\n"
+"Galmee VIP kee yeroo kamiyyuu deebisuu, faayidaalee ol'aanaa hunda banuuf: /vip"
 
-#: webhook/handlers.py:2980
-#, python-brace-format
-msgid "🎉 Congratulations! Your 💎{plan_name}💎 VIP subscription has been activated! It will expire on **{expiry_date_display}**."
-msgstr "🎉 Baga gammaddan! Galmeen 💎{plan_name}💎 VIP kee hojiirra ooluu eegaleera! Guyyaa **{expiry_date_display}** irratti ni xumurama."
+msgid "Bad Request: Invalid JSON"
+msgstr "Gaaffii Bad: JSON sirrii miti"
 
-#: webhook/handlers.py:3005
-msgid "❌ We received your payment, but there was an issue activating your VIP status. Please contact support immediately."
-msgstr "❌ Kaffaltii kee arganneerra, garuu VIP si taasifuun rakkoo qaba. Mee saffisaan deeggarsa qunnamii."
+msgid "Bad Request: Missing tx_ref"
+msgstr "Gaaffii Bad: tx_ref hin jiruu"
 
-#: webhook/handlers.py:3035
-#, python-brace-format
-msgid "😔 Your Chapa payment for {plan_name} failed. Please try again or contact support if you believe this is an error."
-msgstr "😔 Kaffaltiin Chapa karoora {plan_name}f taasifame hin milkoofne. Itti deebi’i yookaan dogoggora ta’uu yoo yaadde deeggarsa qunnamii."
+msgid "Internal Server Error"
+msgstr "Rakkoo Seervera Keessaa"
 
-#: webhook/handlers.py:3127
+msgid ""
+"🎉 Congratulations! Your 💎{plan_name}💎 VIP subscription has been "
+"activated! It will expire on **{expiry_date}**."
+msgstr ""
+"🎉 Baga gammaddan! Galmeen 💎{plan_name}💎 VIP kee "
+"banamee jira! Yeroo xumura isaa: **{expiry_date}**."
+
+msgid "Webhook received, but internal DB/VIP update failed."
+msgstr "Webhook argame, garuu haaromsa DB/VIP keessaa hin milkaa'in."
+
+msgid "Internal Server Error: Network issue with Chapa API"
+msgstr "Rakkoo Seervera Keessaa: Rakkoo network waliin Chapa API"
+
+msgid "Internal Server Error: Unexpected issue"
+msgstr "Rakkoo Seervera Keessaa: Rakkoo hin eegamne"
+
+msgid "Webhook received and processed."
+msgstr "Webhook argamee fi raawwatame."
+
 msgid "Preparing your invoice..."
-msgstr "Herrega kaffaltii kee qopheessaa jirra..."
+msgstr "Fakkii kee qopheessuu..."
 
-#: webhook/handlers.py:3140
 msgid "An error occurred: Invalid plan selected. Please try again."
-msgstr "Dogoggorri mudate: karoora sirrii hin taane filatte. Itti deebi’i."
+msgstr "Rakkoo uumame: Tartiiba sirrii hin filatamne. Itti aanuuf yaali."
 
-#: webhook/handlers.py:3146 webhook/handlers.py:3267
 msgid "title_key"
-msgstr "title_key"
+msgstr "mata-duree"
 
-#: webhook/handlers.py:3147
 msgid "description_key"
-msgstr "description_key"
+msgstr "ibsa"
 
-#: webhook/handlers.py:3167
-#, python-brace-format
 msgid "💫 Your invoice for **{title}** is ready!"
-msgstr "💫 Herrega kaffaltii **{title}** kee qophaa’eera!"
+msgstr "💫 Fakkii kee **{title}** qophaa'eera!"
 
-#: webhook/handlers.py:3196
-msgid "Sorry, something went wrong while creating your invoice. Please try again later."
-msgstr "Dhifama, herrega kee qopheessuuf yaaluun rakkoon tokko mudate. Itti deebi’i yeroo biraa."
+msgid ""
+"Sorry, something went wrong while creating your invoice. Please try again"
+" later."
+msgstr ""
+"Yaa'iin sirrii hin milkaa'in yeroo fakkii kee uumamu. Itti aanuuf yaali."
 
-#: webhook/handlers.py:3262
 msgid "VIP"
 msgstr "VIP"
 
-#: webhook/handlers.py:3280
-#, python-brace-format
-msgid "🎉 Congratulations! Your 💎**{plan_name_display}**💎 VIP subscription has been activated! It will expire on **{expiry_date_for_display}**."
-msgstr "🎉 Baga gammaddan! Galmeen 💎**{plan_name_display}**💎 VIP kee hojiirra ooluu eegaleera! Guyyaa **{expiry_date_for_display}** irratti ni xumurama."
+msgid ""
+"🎉 Congratulations! Your 💎**{plan_name_display}**💎 VIP subscription has "
+"been activated! It will expire on **{expiry_date_for_display}**."
+msgstr ""
+"🎉 Baga gammaddan! Galmeen 💎**{plan_name_display}**💎 VIP kee "
+"banamee jira! Yeroo xumura isaa: **{expiry_date_for_display}**."
 
-#: webhook/handlers.py:3295
-msgid "Thank you for your payment, but there was an issue granting your VIP access. Please contact support."
-msgstr "Kaffaltii keetiif galatoomi, garuu VIP si taasifuun rakkoo qaba ture. Mee deeggarsa qunnamii."
+msgid ""
+"Thank you for your payment, but there was an issue granting your VIP "
+"access. Please contact support."
+msgstr ""
+"Galatoomi kaffaltii kee, garuu rakkoo galmee VIP kee kennuuf uumame. "
+"Deeggarsa qunnamuuf."
 
-#: webhook/handlers.py:3307
 msgid "An unexpected error occurred. Please try again later or contact support."
-msgstr "Dogoggorri hin eegamne tokko mudate. Itti deebi’i yeroo biraa yookaan deeggarsa qunnamii."
+msgstr ""
+"❌ Rakkoo hin eegamne uumame. Itti aanuuf yaali ykn deeggarsa qunnamuuf."
