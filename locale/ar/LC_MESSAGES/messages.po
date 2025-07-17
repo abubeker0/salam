@@ -802,11 +802,11 @@ msgstr "حدث خطأ: تم اختيار خطة غير صالحة. يرجى ال
 
 #: webhook/handlers.py:3588 webhook/handlers.py:3687 webhook/handlers.py:3766
 msgid "title_key"
-msgstr "مفتاح_العنوان"
+msgstr ""
 
 #: webhook/handlers.py:3589 webhook/handlers.py:3688
 msgid "description_key"
-msgstr "مفتاح_الوصف"
+msgstr ""
 
 #: webhook/handlers.py:3605 webhook/handlers.py:3705
 #, python-brace-format

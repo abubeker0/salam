@@ -664,10 +664,10 @@ msgid "An error occurred: Invalid plan selected. Please try again."
 msgstr "Rakkoo uumame: Tartiiba sirrii hin filatamne. Itti aanuuf yaali."
 
 msgid "title_key"
-msgstr "mata-duree"
+msgstr ""
 
 msgid "description_key"
-msgstr "ibsa"
+msgstr ""
 
 msgid "💫 Your invoice for **{title}** is ready!"
 msgstr "💫 Fakkii kee **{title}** qophaa'eera!"
